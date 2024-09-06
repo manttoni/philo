@@ -12,7 +12,7 @@ void	free_session(t_session *ses)
 		free(ses);
 }
 
-t_session	*create_session(char **argv)
+t_session	*create_session(int argc, char **argv)
 {
 	t_session *ses;
 
@@ -20,7 +20,12 @@ t_session	*create_session(char **argv)
 	if (!ses)
 		exit(1);
 	memset(ses, 0, sizeof(t_session));
-	ses->n = atoi(argv[1]); // FF
+	ses->n = atoi(argv[1]);
+	ses->die = atoi(argv[2]);
+	ses->eat = atoi(argv[3]);
+	ses->sleep = atoi(argv[4]);
+	if (argc == 6)
+		ses->times = atoi(argv[5]);
 	ses->philos = malloc(ses->n * sizeof(t_philo));
 	ses->threads = malloc(ses->n * sizeof(pthread_t));
 	ses->forks = malloc(ses->n * sizeof(int));
@@ -42,6 +47,24 @@ void	print_session(t_session *ses)
 	while (i < ses->n)
 	{
 		printf("Philosopher %d\n\tLeft fork: %d\n\tRight fork: %d\n\n", i, *ses->philos[i].left, *ses->philos[i].right);
+		i++;
+	}
+}
+
+void	start_session(t_session *ses)
+{
+	int i;
+
+	i = 0;
+	while (i < ses->n)
+	{
+		pthread_create(ses->threads + i, NULL, sit, (void *) (ses->philos + i));
+		i++;
+	}
+	i = 0;
+	while (i < ses->n)
+	{
+		pthread_join(*(ses->threads + i), NULL);
 		i++;
 	}
 }
