@@ -1,2 +1,2 @@
 all:
-	cc -Wall -Werror -Wextra src/*.c -o philo
+	cc -g -Wall -Werror -Wextra src/*.c -o philo
