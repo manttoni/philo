@@ -16,8 +16,8 @@ typedef struct s_fork
 
 typedef struct s_philo
 {
-	t_fork	*left;
-	t_fork	*right;
+	int	*left;
+	int	*right;
 }	t_philo;
 
 typedef struct s_session
@@ -29,7 +29,11 @@ typedef struct s_session
 	int	number_of_times_each_philosopher_must_eat;
 	pthread_t	*threads;
 	t_philo		*philos;
-	t_fork		*forks;
+	int		*forks;
 }	t_session;
+
+void		free_session(t_session *ses);
+t_session	*create_session(char **argv);
+void		print_session(t_session *ses);
 
 #endif
