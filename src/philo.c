@@ -42,7 +42,6 @@ int	main(int argc, char **argv)
 	}
 	init_philos(ses, time);
 	start_session(ses);
-	print_session(ses);
 	free_session(ses);
 	return (0);
 }

@@ -24,10 +24,11 @@ typedef struct s_time
  * fork taken is philo->id */
 typedef struct s_philo
 {
-	int		id;
-	int		*left;
-	int		*right;
-	t_time	*time;
+	int				id;
+	pthread_mutex_t	left;
+	pthread_mutex_t	right;
+	t_time			*time;
+	pthread_mutex_t	mutex;
 }	t_philo;
 
 typedef struct s_session
@@ -36,7 +37,7 @@ typedef struct s_session
 	t_time			*time;
 	pthread_t		*threads;
 	t_philo			*philos;
-	int				*forks;
+	pthread_mutex_t	*forks;
 }	t_session;
 
 unsigned int	ft_atoi(char *string);

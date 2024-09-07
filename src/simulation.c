@@ -2,14 +2,12 @@
 
 int	eat(t_philo *philo)
 {
-	if (philo->left != 0 || philo->right != 0)
-		return (0);
-	take_fork(philo, philo->left);
-	take_fork(philo, philo->right);
+	pthread_mutex_lock(&philo->left);
+	pthread_mutex_lock(&philo->right);
 	printf("Philo %d is eating\n", philo->id);
 	usleep(philo->time->eat * 1000);
-	return_fork(philo, philo->left);
-	return_fork(philo, philo->right);
+	pthread_mutex_unlock(&philo->left);
+	pthread_mutex_unlock(&philo->right);
 	return (1);
 }
 
