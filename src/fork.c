@@ -8,7 +8,6 @@ void	give_forks(t_session *ses)
 	while (i < ses->n)
 	{
 		ses->philos[i].right = ses->forks + i;
-		ses->philos[i].id = i + 1;
 		if (i + 1 >= ses->n)
 		{
 			ses->philos[0].left = ses->forks + i;

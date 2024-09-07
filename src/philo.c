@@ -1,9 +1,17 @@
 #include "philo.h"
 
-int	parse(char *string, int *v)
+void	init_philos(t_session *ses)
 {
-	*v = ft_atoi(string);
-	return (*v);
+	unsigned int	i;
+
+	give_forks(ses);
+	i = 0;
+	while (i < ses->n)
+	{
+		ses->philos[i].id = i + 1;
+		ses->philos[i].time = ses->time;
+		i++;
+	}
 }
 
 int	main(int argc, char **argv)
@@ -27,7 +35,7 @@ int	main(int argc, char **argv)
 	if (argc == 6)
 		time->times = ft_atoi(argv[5]);
 	ses = create_session(n, time);
-	give_forks(ses);
+	init_philos(ses);
 	start_session(ses);
 	print_session(ses);
 	free_session(ses);
