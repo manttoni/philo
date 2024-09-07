@@ -13,10 +13,10 @@
  * times = [number_of_times_each_philosopher_must_eat]*/
 typedef struct s_time
 {
-	int			die;
-	int			eat;
-	int			sleep;
-	int			times;
+	unsigned int	die;
+	unsigned int	eat;
+	unsigned int	sleep;
+	unsigned int	times;
 }	t_time;
 
 /* free fork is 0,
@@ -31,21 +31,21 @@ typedef struct s_philo
 
 typedef struct s_session
 {
-	int			n;
-	t_time	*time;
-	pthread_t	*threads;
-	t_philo		*philos;
-	int			*forks;
+	unsigned int	n;
+	t_time			*time;
+	pthread_t		*threads;
+	t_philo			*philos;
+	int				*forks;
 }	t_session;
 
-unsigned int	stui(char *string);
+unsigned int	ft_atoi(char *string);
 t_time			*time_settings(int argc, char **argv);
 void			give_forks(t_session *ses);
 void			take_fork(t_philo *philo, int *fork);
 void			return_fork(t_philo *philo, int *fork);
 void			start_session(t_session *ses);
 void			free_session(t_session *ses);
-t_session		*create_session(int argc, char **argv);
+t_session		*create_session(unsigned int n, t_time *time);
 void			print_session(t_session *ses);
 void			*sit(void *ptr);
 

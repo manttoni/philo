@@ -14,20 +14,18 @@ void	free_session(t_session *ses)
 		free(ses);
 }
 
-t_session	*create_session(int argc, char **argv)
+t_session	*create_session(unsigned int n, t_time *time)
 {
 	t_session	*ses;
-	t_time		*time;
 
-	time = time_settings(argc, argv);
 	ses = malloc(sizeof(t_session));
-	if (!ses || !time)
+	if (!ses)
 	{
-		free_session(ses);
+		free(time);
 		exit(1);
 	}
-	memset(ses, 0, sizeof(t_session));
 	ses->time = time;
+	ses->n = n;
 	ses->philos = malloc(ses->n * sizeof(t_philo));
 	ses->threads = malloc(ses->n * sizeof(pthread_t));
 	ses->forks = malloc(ses->n * sizeof(int));
@@ -43,7 +41,7 @@ t_session	*create_session(int argc, char **argv)
 
 void	print_session(t_session *ses)
 {
-	int	i;
+	unsigned int	i;
 
 	i = 0;
 	while (i < ses->n)
@@ -55,7 +53,7 @@ void	print_session(t_session *ses)
 
 void	start_session(t_session *ses)
 {
-	int i;
+	unsigned int i;
 
 	i = 0;
 	while (i < ses->n)

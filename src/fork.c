@@ -2,7 +2,7 @@
 
 void	give_forks(t_session *ses)
 {
-	int	i;
+	unsigned int	i;
 
 	i = 0;
 	while (i < ses->n)

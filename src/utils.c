@@ -1,6 +1,6 @@
 #include "philo.h"
 
-unsigned int	stui(char *string)
+unsigned int	ft_atoi(char *string)
 {
 	unsigned int	ret;
 
@@ -11,7 +11,7 @@ unsigned int	stui(char *string)
 		ret += *string - '0';
 		string++;
 	}
-	if (*string && (*string <= '0' || *string >= '9'))
+	if (*string)
 	{
 		printf(">0\n");
 		return (0);
