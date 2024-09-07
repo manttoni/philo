@@ -2,29 +2,25 @@
 
 void	free_session(t_session *ses)
 {
+	if (ses->philos->time)
+		free(ses->philos->time);
 	if (ses->philos)
 		free(ses->philos);
 	if (ses->threads)
 		free(ses->threads);
 	if (ses->forks)
 		free(ses->forks);
-	if (ses->time)
-		free(ses->time);
 	if (ses)
 		free(ses);
 }
 
-t_session	*create_session(unsigned int n, t_time *time)
+t_session	*create_session(unsigned int n)
 {
 	t_session	*ses;
 
 	ses = malloc(sizeof(t_session));
 	if (!ses)
-	{
-		free(time);
-		exit(1);
-	}
-	ses->time = time;
+		return (NULL);
 	ses->n = n;
 	ses->philos = malloc(ses->n * sizeof(t_philo));
 	ses->threads = malloc(ses->n * sizeof(pthread_t));

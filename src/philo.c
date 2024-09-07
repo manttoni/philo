@@ -1,6 +1,6 @@
 #include "philo.h"
 
-void	init_philos(t_session *ses)
+static void	init_philos(t_session *ses, t_time *time)
 {
 	unsigned int	i;
 
@@ -9,7 +9,7 @@ void	init_philos(t_session *ses)
 	while (i < ses->n)
 	{
 		ses->philos[i].id = i + 1;
-		ses->philos[i].time = ses->time;
+		ses->philos[i].time = time;
 		i++;
 	}
 }
@@ -34,8 +34,10 @@ int	main(int argc, char **argv)
 	time->sleep = ft_atoi(argv[4]);
 	if (argc == 6)
 		time->times = ft_atoi(argv[5]);
-	ses = create_session(n, time);
-	init_philos(ses);
+	ses = create_session(n);
+	if (!ses)
+		free(time);
+	init_philos(ses, time);
 	start_session(ses);
 	print_session(ses);
 	free_session(ses);

@@ -45,7 +45,7 @@ void			take_fork(t_philo *philo, int *fork);
 void			return_fork(t_philo *philo, int *fork);
 void			start_session(t_session *ses);
 void			free_session(t_session *ses);
-t_session		*create_session(unsigned int n, t_time *time);
+t_session		*create_session(unsigned int n);
 void			print_session(t_session *ses);
 void			*sit(void *ptr);
 
