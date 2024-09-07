@@ -1,32 +1,15 @@
 #include "philo.h"
 
-void	give_forks(t_session *ses)
-{
-	int	i;
-
-	i = 0;
-	while (i < ses->n)
-	{
-		ses->philos[i].right = ses->forks + i;
-		ses->philos[i].id = i + 1;
-		if (i + 1 >= ses->n)
-		{
-			ses->philos[0].left = ses->forks + i;
-			break ;
-		}
-		ses->philos[i + 1].left = ses->forks + i;
-		i++;
-	}
-	print_session(ses);
-}
-
 int	main(int argc, char **argv)
 {
 	t_session	*ses;
 
 	if (argc < 5)
+	{
+		printf("<number_of_philosophers> <time_to_die> <time_to_eat> <time_to_sleep> [number_of_times_each_philosopher_must_eat]\n");
 		return (1);
-	ses = create_session(argv);
+	}
+	ses = create_session(argc, argv);
 	give_forks(ses);
 	start_session(ses);
 	print_session(ses);

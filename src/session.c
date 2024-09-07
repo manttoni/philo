@@ -8,24 +8,26 @@ void	free_session(t_session *ses)
 		free(ses->threads);
 	if (ses->forks)
 		free(ses->forks);
+	if (ses->time)
+		free(ses->time);
 	if (ses)
 		free(ses);
 }
 
 t_session	*create_session(int argc, char **argv)
 {
-	t_session *ses;
+	t_session	*ses;
+	t_time		*time;
 
+	time = time_settings(argc, argv);
 	ses = malloc(sizeof(t_session));
-	if (!ses)
+	if (!ses || !time)
+	{
+		free_session(ses);
 		exit(1);
+	}
 	memset(ses, 0, sizeof(t_session));
-	ses->n = atoi(argv[1]);
-	ses->die = atoi(argv[2]);
-	ses->eat = atoi(argv[3]);
-	ses->sleep = atoi(argv[4]);
-	if (argc == 6)
-		ses->times = atoi(argv[5]);
+	ses->time = time;
 	ses->philos = malloc(ses->n * sizeof(t_philo));
 	ses->threads = malloc(ses->n * sizeof(pthread_t));
 	ses->forks = malloc(ses->n * sizeof(int));
