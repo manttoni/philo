@@ -5,6 +5,7 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <string.h>
+# include <unistd.h>
 
 /* n = number_of_philosophers 
  * die = time_to_die
