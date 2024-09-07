@@ -8,13 +8,13 @@ void	give_forks(t_session *ses)
 	while (i < ses->n)
 	{
 		pthread_mutex_init(&ses->forks[i], NULL);
-		ses->philos[i].right = ses->forks[i];
+		ses->philos[i].right = &ses->forks[i];
 		if (i + 1 >= ses->n)
 		{
-			ses->philos[0].left = ses->forks[i];
+			ses->philos[0].left = &ses->forks[i];
 			break ;
 		}
-		ses->philos[i + 1].left = ses->forks[i];
+		ses->philos[i + 1].left = &ses->forks[i];
 		i++;
 	}
 }

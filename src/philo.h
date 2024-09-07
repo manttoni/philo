@@ -6,6 +6,7 @@
 # include <stdio.h>
 # include <string.h>
 # include <unistd.h>
+# include <sys/time.h>
 
 /* n = number_of_philosophers 
  * die = time_to_die
@@ -25,8 +26,8 @@ typedef struct s_time
 typedef struct s_philo
 {
 	int				id;
-	pthread_mutex_t	left;
-	pthread_mutex_t	right;
+	pthread_mutex_t	*left;
+	pthread_mutex_t	*right;
 	t_time			*time;
 	pthread_mutex_t	mutex;
 }	t_philo;
