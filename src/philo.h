@@ -28,16 +28,16 @@ typedef struct s_time
 	unsigned int	times;
 }	t_time;
 
-/* free fork is 0,
- * fork taken is philo->id */
 typedef struct s_philo
 {
 	int				id;
+	int				can_starve;
 	t_fork			*left;
 	t_fork			*right;
 	t_time			*time;
 	clock_t			last_meal;
-	int				*all_alive;
+	int				in_simulation;
+	unsigned int	times_eaten;
 }	t_philo;
 
 typedef struct s_session

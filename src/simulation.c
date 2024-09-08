@@ -8,40 +8,39 @@ void	philo_sleep(t_philo *philo)
 
 void	eat(t_philo *philo)
 {
-	if (get_hunger(philo) >= 100)
-		return ;
+	//if (philo->id % 2 == 0)
+	//	usleep(1000);
 	if (philo->left->is_locked == 0 && philo->right->is_locked == 0)
 		lock_forks(philo);
 	else
 		return ;
-	if (get_hunger(philo) >= 100)
+	if (philo->in_simulation == 0)
 		return ;
 	printf("%ld Philo %d is eating (hunger = %d)\n", get_ms(), philo->id, get_hunger(philo));
+	philo->can_starve = 0;
 	usleep(philo->time->eat * 1000);
 	unlock_forks(philo);
 	philo->last_meal = get_ms();
-	philo_sleep(philo);
+	philo->can_starve = 1;
+	philo->times_eaten++;
+	if (philo->in_simulation)
+		philo_sleep(philo);
 }
 
 void	*sit(void *ptr)
 {
-	t_philo *philo;
-	int		min_hunger;
+	t_philo			*philo;
+	int				min_hunger;
 
-	min_hunger = 10;
+	min_hunger = 0;
 	philo = (t_philo *) ptr;
-	while (*philo->all_alive)
+	while (philo->in_simulation > 0)
 	{
+		eat(philo);
 		while (get_hunger(philo) < min_hunger)
 			usleep(1000);
-		if (get_hunger(philo) > min_hunger)
-			eat(philo);
-		if (get_hunger(philo) >= 100)
-		{
-			*philo->all_alive = 0;
-			printf("%ld Philo %d died (hunger = %d)\n", get_ms(), philo->id, get_hunger(philo));
-			break;
-		}
 	}
+	printf("%ld Philo %d is out\n", get_ms(), philo->id);
+	philo->can_starve = 0;
 	return (NULL);
 }

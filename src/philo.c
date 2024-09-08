@@ -3,18 +3,17 @@
 static void	init_philos(t_session *ses, t_time *time)
 {
 	unsigned int	i;
-	int				*all_alive;
 
-	all_alive = malloc(sizeof(int));
-	*all_alive = 1;
 	give_forks(ses);
 	i = 0;
 	while (i < ses->n)
 	{
 		ses->philos[i].id = i + 1;
 		ses->philos[i].time = time;
-		ses->philos[i].all_alive = all_alive;
+		ses->philos[i].in_simulation = 1;
 		ses->philos[i].last_meal = get_ms();
+		ses->philos[i].can_starve = 1;
+		ses->philos[i].times_eaten = 0;
 		i++;
 	}
 }
@@ -37,6 +36,7 @@ int	main(int argc, char **argv)
 	time->die = ft_atoi(argv[2]);
 	time->eat = ft_atoi(argv[3]);
 	time->sleep = ft_atoi(argv[4]);
+	time->times = -1;
 	if (argc == 6)
 		time->times = ft_atoi(argv[5]);
 	ses = create_session(n);
