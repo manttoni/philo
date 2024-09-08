@@ -21,18 +21,37 @@ void	give_forks(t_session *ses)
 	}
 }
 
-void	take_forks(t_philo *philo)
+void	lock_forks(t_philo *philo)
 {
-	pthread_mutex_lock(philo->left->mutex);
-	philo->left->is_locked = 1;
+	printf("%ld Philo %d tries to take forks\n", get_ms(), philo->id);
+	/*if (philo->id % 2 == 0)
+	{*/
+		pthread_mutex_lock(philo->left->mutex);
+		philo->left->is_locked = 1;
+		printf("%ld Philo %d has taken a fork. (left)\n", get_ms(), philo->id);
+	//}
 	pthread_mutex_lock(philo->right->mutex);
 	philo->right->is_locked = 1;
+	printf("%ld Philo %d has taken a fork. (right)\n", get_ms(), philo->id);
+	/*if (philo->id % 2 == 1)
+	{
+		pthread_mutex_lock(philo->left->mutex);
+		philo->left->is_locked = 1;
+		printf("%ld Philo %d has taken a fork. (left)\n", get_ms(), philo->id);
+	}*/
 }
-
-void	return_forks(t_philo *philo)
+void	unlock_forks(t_philo *philo)
 {
-	philo->left->is_locked = 0;
-	pthread_mutex_unlock(philo->left->mutex);
-	philo->right->is_locked = 0;
+	/*if (philo->id % 2 == 0)
+	{*/
+		pthread_mutex_unlock(philo->left->mutex);
+		philo->left->is_locked = 0;
+	//}
 	pthread_mutex_unlock(philo->right->mutex);
+	philo->right->is_locked = 0;
+	/*if (philo->id % 2 == 1)
+	{
+		pthread_mutex_unlock(philo->left->mutex);
+		philo->left->is_locked = 0;
+	}*/
 }
