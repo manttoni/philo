@@ -14,7 +14,7 @@ static void	init_philos(t_session *ses, t_time *time)
 		ses->philos[i].id = i + 1;
 		ses->philos[i].time = time;
 		ses->philos[i].all_alive = all_alive;
-		ses->philos[i].last_meal = clock() * 1000;
+		ses->philos[i].last_meal = get_ms();
 		i++;
 	}
 }

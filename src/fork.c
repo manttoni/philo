@@ -20,3 +20,19 @@ void	give_forks(t_session *ses)
 		i++;
 	}
 }
+
+void	take_forks(t_philo *philo)
+{
+	pthread_mutex_lock(philo->left->mutex);
+	philo->left->is_locked = 1;
+	pthread_mutex_lock(philo->right->mutex);
+	philo->right->is_locked = 1;
+}
+
+void	return_forks(t_philo *philo)
+{
+	philo->left->is_locked = 0;
+	pthread_mutex_unlock(philo->left->mutex);
+	philo->right->is_locked = 0;
+	pthread_mutex_unlock(philo->right->mutex);
+}

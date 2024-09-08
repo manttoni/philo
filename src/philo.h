@@ -49,6 +49,9 @@ typedef struct s_session
 	t_fork			*forks;
 }	t_session;
 
+long				get_ms();
+void			take_forks(t_philo *philo);
+void			return_forks(t_philo *philo);
 int				get_hunger(t_philo *philo);
 unsigned int	ft_atoi(char *string);
 t_time			*time_settings(int argc, char **argv);
