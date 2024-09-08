@@ -6,7 +6,14 @@
 # include <stdio.h>
 # include <string.h>
 # include <unistd.h>
+# include <time.h>
 # include <sys/time.h>
+
+typedef struct s_fork
+{
+	pthread_mutex_t	*mutex;
+	int				is_locked;
+}	t_fork;
 
 /* n = number_of_philosophers 
  * die = time_to_die
@@ -26,10 +33,11 @@ typedef struct s_time
 typedef struct s_philo
 {
 	int				id;
-	pthread_mutex_t	*left;
-	pthread_mutex_t	*right;
+	t_fork			*left;
+	t_fork			*right;
 	t_time			*time;
-	pthread_mutex_t	mutex;
+	clock_t			last_meal;
+	int				*all_alive;
 }	t_philo;
 
 typedef struct s_session
@@ -38,9 +46,10 @@ typedef struct s_session
 	t_time			*time;
 	pthread_t		*threads;
 	t_philo			*philos;
-	pthread_mutex_t	*forks;
+	t_fork			*forks;
 }	t_session;
 
+int				get_hunger(t_philo *philo);
 unsigned int	ft_atoi(char *string);
 t_time			*time_settings(int argc, char **argv);
 void			give_forks(t_session *ses);

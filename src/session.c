@@ -24,7 +24,7 @@ t_session	*create_session(unsigned int n)
 	ses->n = n;
 	ses->philos = malloc(ses->n * sizeof(t_philo));
 	ses->threads = malloc(ses->n * sizeof(pthread_t));
-	ses->forks = malloc(ses->n * sizeof(pthread_mutex_t));
+	ses->forks = malloc(ses->n * sizeof(t_fork));
 	if (!ses->philos || !ses->threads || !ses->forks)
 	{
 		free_session(ses);

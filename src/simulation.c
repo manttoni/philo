@@ -1,47 +1,39 @@
 #include "philo.h"
 
-void ts()
-{
-    time_t now;
-    struct tm ts;
-    char buf[80];
-
-    // Get current time
-    time(&now);
-
-    // Format time, "YYYY-MM-DD HH:MM:SS"
-    ts = *localtime(&now);
-    strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", &ts);
-
-    printf("Current time: %s\n", buf);
-}
-
 void	eat(t_philo *philo)
 {
-	pthread_mutex_lock(philo->left);
-	pthread_mutex_lock(philo->right);
-	ts();
+	pthread_mutex_lock(philo->left->mutex);
+	pthread_mutex_lock(philo->right->mutex);
 	printf("Philo %d is eating\n", philo->id);
 	usleep(philo->time->eat * 1000);
-	pthread_mutex_unlock(philo->left);
-	pthread_mutex_unlock(philo->right);
+	philo->last_meal = clock() * 1000;
+	pthread_mutex_unlock(philo->left->mutex);
+	pthread_mutex_unlock(philo->right->mutex);
 }
 
 void	*sit(void *ptr)
 {
 	t_philo *philo;
+	int		hunger;
 
 	philo = (t_philo *) ptr;
-	while (1)
+	while (*philo->all_alive)
 	{
-		if (1)
+		hunger = get_hunger(philo);
+		printf("Philo: %d hunger: %d all_alive: %d\n", philo->id, hunger, *philo->all_alive);
+		if (hunger < 100 && !philo->left->is_locked && !philo->right->is_locked)
 			eat(philo);
+		else if (get_hunger(philo) >= 100)
+		{
+			*philo->all_alive = 0;
+			printf("Philo %d died\n", philo->id);
+			break;
+		}
 		else
 		{
-			usleep(1000000);
+			usleep(philo->time->die * 250);
 			continue;
 		}
-		ts();
 		printf("Philo %d is sleeping and thinking\n", philo->id);
 		usleep(philo->time->sleep * 1000);
 	}

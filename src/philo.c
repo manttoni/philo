@@ -3,13 +3,18 @@
 static void	init_philos(t_session *ses, t_time *time)
 {
 	unsigned int	i;
+	int				*all_alive;
 
+	all_alive = malloc(sizeof(int));
+	*all_alive = 1;
 	give_forks(ses);
 	i = 0;
 	while (i < ses->n)
 	{
 		ses->philos[i].id = i + 1;
 		ses->philos[i].time = time;
+		ses->philos[i].all_alive = all_alive;
+		ses->philos[i].last_meal = clock() * 1000;
 		i++;
 	}
 }

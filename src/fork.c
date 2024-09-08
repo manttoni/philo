@@ -7,7 +7,9 @@ void	give_forks(t_session *ses)
 	i = 0;
 	while (i < ses->n)
 	{
-		pthread_mutex_init(&ses->forks[i], NULL);
+		ses->forks[i].mutex = malloc(sizeof(pthread_mutex_t));
+		ses->forks[i].is_locked = 0;
+		pthread_mutex_init(ses->forks[i].mutex, NULL);
 		ses->philos[i].right = &ses->forks[i];
 		if (i + 1 >= ses->n)
 		{
@@ -17,18 +19,4 @@ void	give_forks(t_session *ses)
 		ses->philos[i + 1].left = &ses->forks[i];
 		i++;
 	}
-}
-
-void	take_fork(t_philo *philo, int *fork)
-{
-	if (*fork != 0)
-		return ;
-	*fork = philo->id;
-}
-
-void	return_fork(t_philo *philo, int *fork)
-{
-	if (*fork != philo->id)
-		return ;
-	*fork = 0;
 }
