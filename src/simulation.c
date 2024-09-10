@@ -11,7 +11,7 @@ int	philo_eat(t_philo *philo)
 	{
 		if (*philo->all_alive == 0)
 			return (0);
-		usleep(min(philo->time->eat, 10000));
+		usleep(1000);
 	}
 	unlock_forks(philo);
 	philo->last_meal = timestamp(philo->time);
@@ -30,7 +30,7 @@ void	philo_sleep(t_philo *philo)
 	{
 		if (*philo->all_alive == 0)
 			return ;
-		usleep(min(philo->time->sleep, 10000));
+		usleep(1000);
 	}
 }
 
