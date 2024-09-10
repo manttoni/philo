@@ -5,7 +5,7 @@ int time_since_meal(t_philo *philo)
 	int		now;
 	int		time_taken;
 
-	now = get_ms();
+	now = timestamp(philo->time);
 	time_taken = (now - philo->last_meal);
 	return (time_taken);
 }
