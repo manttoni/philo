@@ -26,18 +26,18 @@ int	lock_forks(t_philo *philo)
 	if (philo->left->is_locked == 1 || philo->right->is_locked == 1)
 		return (0);
 	pthread_mutex_lock(philo->left->mutex);
-	philo->left->is_locked = 1;
-	printf("%ld %d has taken a fork (left)\n", timestamp(philo->time), philo->id);
 	pthread_mutex_lock(philo->right->mutex);
+	philo->left->is_locked = 1;
 	philo->right->is_locked = 1;
+	printf("%ld %d has taken a fork (left)\n", timestamp(philo->time), philo->id);
 	printf("%ld %d has taken a fork (right)\n", timestamp(philo->time), philo->id);
 	return (1);
 }
 
 void	unlock_forks(t_philo *philo)
 {
-	pthread_mutex_unlock(philo->left->mutex);
-	philo->left->is_locked = 0;
-	pthread_mutex_unlock(philo->right->mutex);
 	philo->right->is_locked = 0;
+	philo->left->is_locked = 0;
+	pthread_mutex_unlock(philo->left->mutex);
+	pthread_mutex_unlock(philo->right->mutex);
 }
