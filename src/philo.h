@@ -28,19 +28,19 @@ typedef struct s_time_set
 	unsigned int	die;
 	unsigned int	eat;
 	unsigned int	sleep;
-	unsigned int	times;
+	int				times;
 	long			simul_start;
 }	t_time_set;
 
 typedef struct s_philo
 {
 	int				id;
-	int				is_alive;
+	int				*all_alive;
 	t_fork			*left;
 	t_fork			*right;
 	t_time_set		*time;
 	int				last_meal;
-	unsigned int	times_eaten;
+	int				times_eaten;
 	pthread_mutex_t	*mutex;
 }	t_philo;
 
@@ -52,6 +52,7 @@ typedef struct s_session
 	t_fork			*forks;
 }	t_session;
 
+int				min(int a, int b);
 void			print_log(t_philo *philo, char *message);
 void			monitor_session(t_session *ses);
 int				lock_forks(t_philo *philo);

@@ -2,9 +2,17 @@
 
 int	philo_eat(t_philo *philo)
 {
+	int	start_eating;
+
 	pthread_mutex_lock(philo->mutex);
 	print_log(philo, "is eating");
-	usleep(philo->time->eat * 1000);
+	start_eating = timestamp(philo->time);
+	while (timestamp(philo->time) - start_eating < philo->time->eat)
+	{
+		if (*philo->all_alive == 0)
+			return (0);
+		usleep(min(philo->time->eat, 10000));
+	}
 	unlock_forks(philo);
 	philo->last_meal = timestamp(philo->time);
 	philo->times_eaten++;
@@ -14,24 +22,29 @@ int	philo_eat(t_philo *philo)
 
 void	philo_sleep(t_philo *philo)
 {
+	int	start_sleeping;
+
 	print_log(philo, "is sleeping");
-	usleep(philo->time->sleep * 1000);
+	start_sleeping = timestamp(philo->time);
+	while (timestamp(philo->time) - start_sleeping < philo->time->sleep)
+	{
+		if (*philo->all_alive == 0)
+			return ;
+		usleep(min(philo->time->sleep, 10000));
+	}
 }
 
-int	philo_think(t_philo *philo)
+void	philo_think(t_philo *philo)
 {
 	int	min_hunger;
 
-	if (philo->is_alive == 0)
-		return (0);
 	min_hunger = 0;
-	if (get_hunger(philo) < min_hunger || lock_forks(philo) == 0)
+	if (*philo->all_alive && (get_hunger(philo) < min_hunger || lock_forks(philo) == 0))
 	{
-		printf("%ld %d is thinking\n", timestamp(philo->time), philo->id);
-		while (philo->is_alive && (get_hunger(philo) < min_hunger || lock_forks(philo) == 0))
-			usleep(philo->time->die * 10);
+		print_log(philo, "is thinking");
+		while (*philo->all_alive && (get_hunger(philo) < min_hunger || lock_forks(philo) == 0))
+			usleep(philo->time->die);
 	}
-	return (philo->is_alive);
 }
 
 void	*watch_philo(void *ptr)
@@ -39,19 +52,20 @@ void	*watch_philo(void *ptr)
 	t_philo	*philo;
 
 	philo = (t_philo *)ptr;
-	while (philo->is_alive)
+	while (*philo->all_alive)
 	{
 		pthread_mutex_lock(philo->mutex);
-		if (get_hunger(philo) >= 100)
+		//printf("%ld %d hunger: %d\n", timestamp(philo->time), philo->id, get_hunger(philo));
+		if (get_hunger(philo) >= 100 && *philo->all_alive)
 		{
-			philo->is_alive = 0;
+			*philo->all_alive = 0;
 			print_log(philo, "died");
 			break ;
 		}
-		if (philo->times_eaten >= philo->time->times)
+		if (philo->time->times != -1 && philo->times_eaten >= philo->time->times)
 			break ;
 		pthread_mutex_unlock(philo->mutex);
-		usleep(philo->time->die * 10);
+		usleep(1000);
 	}
 	pthread_mutex_unlock(philo->mutex);
 	return (NULL);
@@ -64,17 +78,20 @@ void	*simulate(void *ptr)
 
 	philo = (t_philo *)ptr;
 	pthread_create(&watch, NULL, watch_philo, ptr);
-	while (philo->is_alive)
+	if (philo->id % 2 == 0)
+		usleep(1000);
+	while (*philo->all_alive)
 	{
-		if (philo_think(philo) == 0)
-			break ;
-		if (philo_eat(philo))
+		philo_think(philo);
+		if (*philo->all_alive == 1 && philo_eat(philo))
 		{
-			if (philo->times_eaten >= philo->time->times)
+			if (philo->time->times != -1 && philo->times_eaten >= philo->time->times)
 				break ;
-			philo_sleep(philo);
+			if (*philo->all_alive == 1)
+				philo_sleep(philo);
 		}
 	}
+	pthread_mutex_unlock(philo->mutex);
 	pthread_join(watch, NULL);
 	return (NULL);
 }

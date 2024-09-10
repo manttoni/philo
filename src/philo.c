@@ -4,7 +4,10 @@ static void	init_philos(t_session *ses, t_time_set *time)
 {
 	unsigned int	i;
 	t_philo			*philo;
+	int				*all_alive;
 
+	all_alive = malloc(sizeof(int));
+	*all_alive = 1;
 	give_forks(ses);
 	i = 0;
 	while (i < ses->n)
@@ -14,7 +17,7 @@ static void	init_philos(t_session *ses, t_time_set *time)
 		philo->time = time;
 		philo->last_meal = 0;
 		philo->times_eaten = 0;
-		philo->is_alive = 1;
+		philo->all_alive = all_alive;
 		philo->mutex = malloc(sizeof(pthread_mutex_t));
 		pthread_mutex_init(philo->mutex, NULL);
 		i++;

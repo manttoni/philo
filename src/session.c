@@ -2,14 +2,36 @@
 
 void	free_session(t_session *ses)
 {
+	unsigned int	i;
+
+	i = 0;
+
 	if (ses->philos->time)
 		free(ses->philos->time);
+	if (ses->philos->all_alive)
+		free(ses->philos->all_alive);
 	if (ses->philos)
+	{
+		while (i < ses->n)
+		{
+			unlock_forks(&ses->philos[i]);
+			free(ses->philos[i].mutex);
+			i++;
+		}
 		free(ses->philos);
+	}
 	if (ses->threads)
 		free(ses->threads);
+	i = 0;
 	if (ses->forks)
+	{
+		while (i < ses->n)
+		{
+			free(ses->forks[i].mutex);
+			i++;
+		}
 		free(ses->forks);
+	}
 	if (ses)
 		free(ses);
 }
@@ -34,21 +56,6 @@ t_session	*create_session(unsigned int n)
 	return (ses);
 }
 
-void	end_session(t_session *ses)
-{
-	unsigned int	i;
-	t_philo			*philo;
-
-	i = 0;
-	while (i < ses->n)
-	{
-		philo = &ses->philos[i];
-		pthread_mutex_lock(philo->mutex);
-		philo->is_alive = 0;
-		pthread_mutex_unlock(philo->mutex);
-		i++;
-	}
-}
 void	start_session(t_session *ses)
 {
 	unsigned int i;
@@ -63,8 +70,6 @@ void	start_session(t_session *ses)
 	i = 0;
 	while (i < ses->n)
 	{
-		if (ses->philos[i].is_alive == 0)
-			end_session(ses);
 		pthread_join(*(ses->threads + i), NULL);
 		i++;
 	}
