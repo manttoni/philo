@@ -10,7 +10,11 @@ int	philo_eat(t_philo *philo)
 	while (timestamp(philo->time) - start_eating < philo->time->eat)
 	{
 		if (*philo->all_alive == 0)
+		{
+			unlock_forks(philo);
+			pthread_mutex_unlock(philo->mutex);
 			return (0);
+		}
 		usleep(1000);
 	}
 	unlock_forks(philo);
@@ -78,7 +82,7 @@ void	*simulate(void *ptr)
 
 	philo = (t_philo *)ptr;
 	pthread_create(&watch, NULL, watch_philo, ptr);
-	if (philo->id % 2 == 0)
+	if (*philo->all_alive && philo->id % 2 == 0)
 		usleep(1000);
 	while (*philo->all_alive)
 	{
@@ -91,7 +95,6 @@ void	*simulate(void *ptr)
 				philo_sleep(philo);
 		}
 	}
-	pthread_mutex_unlock(philo->mutex);
 	pthread_join(watch, NULL);
 	return (NULL);
 }

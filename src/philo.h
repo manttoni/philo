@@ -52,6 +52,7 @@ typedef struct s_session
 	t_fork			*forks;
 }	t_session;
 
+int				validate(int argc, char **argv);
 int				min(int a, int b);
 void			print_log(t_philo *philo, char *message);
 void			monitor_session(t_session *ses);

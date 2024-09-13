@@ -21,17 +21,28 @@ void	give_forks(t_session *ses)
 	}
 }
 
+int	lock_fork(t_philo *philo, t_fork *fork)
+{
+	if (*philo->all_alive == 0)
+		return (0);
+	pthread_mutex_lock(fork->mutex);
+	if (*philo->all_alive == 0)
+		return (0);
+	fork->is_locked = 1;
+	print_log(philo, "has taken a fork");
+	return (1);
+}
+
 int	lock_forks(t_philo *philo)
 {
+	if (philo->left == philo->right)
+		return (0);
 	if (philo->left->is_locked == 1 || philo->right->is_locked == 1)
 		return (0);
-	pthread_mutex_lock(philo->left->mutex);
-	pthread_mutex_lock(philo->right->mutex);
-	philo->left->is_locked = 1;
-	philo->right->is_locked = 1;
-	printf("%ld %d has taken a fork (left)\n", timestamp(philo->time), philo->id);
-	printf("%ld %d has taken a fork (right)\n", timestamp(philo->time), philo->id);
-	return (1);
+	if (lock_fork(philo, philo->left) && lock_fork(philo, philo->right))
+		return (1);
+	unlock_forks(philo);
+	return (0);
 }
 
 void	unlock_forks(t_philo *philo)
