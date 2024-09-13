@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: amaula <amaula@student.hive.fi>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/13 12:53:14 by amaula            #+#    #+#             */
+/*   Updated: 2024/09/13 12:53:16 by amaula           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 static void	init_philos(t_session *ses, t_time_set *time)
@@ -47,7 +59,7 @@ int	main(int argc, char **argv)
 	t_time_set		*time;
 
 	if (validate(argc, argv) == 0)
-		return (0);
+		return (1);
 	time = init_time(argc, argv);
 	if (!time)
 		return (1);

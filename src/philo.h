@@ -1,5 +1,17 @@
-#ifndef PHILOS_H
-# define PHILOS_H
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: amaula <amaula@student.hive.fi>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/13 12:53:45 by amaula            #+#    #+#             */
+/*   Updated: 2024/09/13 13:02:29 by amaula           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef PHILO_H
+# define PHILO_H
 
 # include <pthread.h>
 # include <stdlib.h>
@@ -59,7 +71,7 @@ void			monitor_session(t_session *ses);
 int				lock_forks(t_philo *philo);
 void			unlock_forks(t_philo *philo);
 long			timestamp(t_time_set *time);
-long			get_ms();
+long			get_ms(void);
 void			take_forks(t_philo *philo);
 void			return_forks(t_philo *philo);
 int				get_hunger(t_philo *philo);

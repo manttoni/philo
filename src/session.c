@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   session.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: amaula <amaula@student.hive.fi>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/13 12:53:52 by amaula            #+#    #+#             */
+/*   Updated: 2024/09/13 13:01:26 by amaula           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 void	free_session(t_session *ses)
@@ -41,13 +53,15 @@ t_session	*create_session(unsigned int n)
 
 void	start_session(t_session *ses)
 {
-	unsigned int i;
+	unsigned int	i;
+	void			*s;
 
+	s = simulate;
 	i = 0;
 	ses->philos->time->simul_start = get_ms();
 	while (i < ses->n)
 	{
-		pthread_create(ses->threads + i, NULL, simulate, (void *) (ses->philos + i));
+		pthread_create(ses->threads + i, NULL, s, (void *)(ses->philos + i));
 		i++;
 	}
 	i = 0;

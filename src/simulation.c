@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   simulation.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: amaula <amaula@student.hive.fi>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/13 12:53:57 by amaula            #+#    #+#             */
+/*   Updated: 2024/09/13 12:58:26 by amaula           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 int	philo_eat(t_philo *philo)
@@ -43,11 +55,17 @@ void	philo_think(t_philo *philo)
 	int	min_hunger;
 
 	min_hunger = 0;
-	if (*philo->all_alive && (get_hunger(philo) < min_hunger || lock_forks(philo) == 0))
+	if (*philo->all_alive == 0)
+		return ;
+	if (get_hunger(philo) < min_hunger || lock_forks(philo) == 0)
 	{
 		print_log(philo, "is thinking");
-		while (*philo->all_alive && (get_hunger(philo) < min_hunger || lock_forks(philo) == 0))
+		while (get_hunger(philo) < min_hunger || lock_forks(philo) == 0)
+		{
+			if (*philo->all_alive == 0)
+				return ;
 			usleep(philo->time->die);
+		}
 	}
 }
 
@@ -59,14 +77,13 @@ void	*watch_philo(void *ptr)
 	while (*philo->all_alive)
 	{
 		pthread_mutex_lock(philo->mutex);
-		//printf("%ld %d hunger: %d\n", timestamp(philo->time), philo->id, get_hunger(philo));
 		if (get_hunger(philo) >= 100 && *philo->all_alive)
 		{
 			*philo->all_alive = 0;
 			print_log(philo, "died");
 			break ;
 		}
-		if (philo->time->times != -1 && philo->times_eaten >= philo->time->times)
+		if (philo->time->times > 0 && philo->times_eaten >= philo->time->times)
 			break ;
 		pthread_mutex_unlock(philo->mutex);
 		usleep(1000);
@@ -89,8 +106,9 @@ void	*simulate(void *ptr)
 		philo_think(philo);
 		if (*philo->all_alive == 1 && philo_eat(philo))
 		{
-			if (philo->time->times != -1 && philo->times_eaten >= philo->time->times)
-				break ;
+			if (philo->time->times > 0)
+				if (philo->times_eaten >= philo->time->times)
+					break ;
 			if (*philo->all_alive == 1)
 				philo_sleep(philo);
 		}
