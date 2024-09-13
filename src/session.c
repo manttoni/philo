@@ -5,35 +5,18 @@ void	free_session(t_session *ses)
 	unsigned int	i;
 
 	i = 0;
-
-	if (ses->philos->time)
-		free(ses->philos->time);
-	if (ses->philos->all_alive)
-		free(ses->philos->all_alive);
-	if (ses->philos)
+	while (i < ses->n)
 	{
-		while (i < ses->n)
-		{
-			unlock_forks(&ses->philos[i]);
-			free(ses->philos[i].mutex);
-			i++;
-		}
-		free(ses->philos);
+		free(ses->philos[i].mutex);
+		free(ses->forks[i].mutex);
+		i++;
 	}
-	if (ses->threads)
-		free(ses->threads);
-	i = 0;
-	if (ses->forks)
-	{
-		while (i < ses->n)
-		{
-			free(ses->forks[i].mutex);
-			i++;
-		}
-		free(ses->forks);
-	}
-	if (ses)
-		free(ses);
+	free(ses->philos->time);
+	free(ses->philos->all_alive);
+	free(ses->philos);
+	free(ses->threads);
+	free(ses->forks);
+	free(ses);
 }
 
 t_session	*create_session(unsigned int n)
