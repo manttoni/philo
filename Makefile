@@ -4,21 +4,23 @@ SRC_DIR = src
 SRC_FIL = math.c time.c fork.c hunger.c philo.c session.c simulation.c validation.c
 SRC = $(addprefix $(SRC_DIR)/, $(SRC_FIL))
 
-OBJS = $(SRCS:.c=.o)
-OBJS := $(addprefix $(SRC_DIR), $(OBJS))
+OBJS = $(SRC:.c=.o)
 
-all: $(OBJS)
+all: $(NAME)
+
+$(NAME): $(OBJS)
 	cc -g -Wall -Werror -Wextra $(OBJS) -o $(NAME)
 
-$(OBJS):
-	cc -g -Wall -Werror -Wextra $(SRC) -c $< -o $@
+$(SRC_DIR)/%.o: $(SRC_DIR)/%.c
+	cc -g -Wall -Werror -Wextra -c $< -o $@
 
 clean:
-	rm $(OBJS)
+	rm -f $(OBJS)
 
 fclean: clean
-	rm $(NAME)
+	rm -f $(NAME)
 
 re: fclean all
 
-.PHONY: all clean fclean re $(OBJS)
+.PHONY: all clean fclean re
+
