@@ -6,7 +6,7 @@
 /*   By: amaula <amaula@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 13:15:34 by amaula            #+#    #+#             */
-/*   Updated: 2024/09/20 15:21:21 by amaula           ###   ########.fr       */
+/*   Updated: 2024/09/20 16:53:45 by amaula           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,21 @@ static void	check_satisfaction(t_session *ses)
 	printf("Everyone has eaten!\n");
 }
 
+void	unlock_all_forks(t_session *ses)
+{
+	unsigned int	i;
+	
+	i = 0;
+	while (i < ses->n)
+	{
+		unlock_forks(&ses->philos[i]);
+		i++;
+	}
+}
+
 void	*watch(void *ptr)
 {
-	t_session 		*ses;
+	t_session	*ses;
 
 	ses = (t_session *)ptr;
 	while (simulation_finished(ses->philos->simulation) == 0)
@@ -75,5 +87,6 @@ void	*watch(void *ptr)
 			if (ses->philos->time->times > 0)
 				check_satisfaction(ses);
 	}
+	unlock_all_forks(ses);
 	return (NULL);
 }

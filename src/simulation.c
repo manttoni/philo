@@ -6,7 +6,7 @@
 /*   By: amaula <amaula@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:53:57 by amaula            #+#    #+#             */
-/*   Updated: 2024/09/20 15:36:58 by amaula           ###   ########.fr       */
+/*   Updated: 2024/09/20 16:56:33 by amaula           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	simulation_finished(t_simulation *sim)
 static void	philo_eat(t_philo *philo)
 {
 	int	start_eating;
-	
+
 	if (lock_forks(philo) == 0)
 		return ;
 	pthread_mutex_lock(philo->mutex);
@@ -58,6 +58,8 @@ static void	philo_sleep(t_philo *philo)
 static void	philo_think(t_philo *philo)
 {
 	print_log(philo, "is thinking");
+	while (get_hunger(philo) < 0)
+		usleep(1000);
 }
 
 void	*simulate(void *ptr)
@@ -71,10 +73,10 @@ void	*simulate(void *ptr)
 	{
 		philo_eat(philo);
 		if (simulation_finished(philo->simulation) == 1)
-			break;
+			break ;
 		philo_sleep(philo);
 		if (simulation_finished(philo->simulation) == 1)
-			break;
+			break ;
 		philo_think(philo);
 	}
 	return (NULL);
