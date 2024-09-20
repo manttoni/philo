@@ -6,7 +6,7 @@
 /*   By: amaula <amaula@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:53:52 by amaula            #+#    #+#             */
-/*   Updated: 2024/09/13 13:01:26 by amaula           ###   ########.fr       */
+/*   Updated: 2024/09/20 15:28:19 by amaula           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ void	free_session(t_session *ses)
 		i++;
 	}
 	free(ses->philos->time);
-	free(ses->philos->all_alive);
+	free(ses->philos->simulation->mutex);
+	free(ses->philos->simulation);
 	free(ses->philos);
 	free(ses->threads);
 	free(ses->forks);
@@ -55,6 +56,7 @@ void	start_session(t_session *ses)
 {
 	unsigned int	i;
 	void			*s;
+	pthread_t		watcher;
 
 	s = simulate;
 	i = 0;
@@ -64,10 +66,12 @@ void	start_session(t_session *ses)
 		pthread_create(ses->threads + i, NULL, s, (void *)(ses->philos + i));
 		i++;
 	}
+	pthread_create(&watcher, NULL, watch, ses);
 	i = 0;
 	while (i < ses->n)
 	{
 		pthread_join(*(ses->threads + i), NULL);
 		i++;
 	}
+	pthread_join(watcher, NULL);
 }

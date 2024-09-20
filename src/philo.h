@@ -6,7 +6,7 @@
 /*   By: amaula <amaula@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:53:45 by amaula            #+#    #+#             */
-/*   Updated: 2024/09/13 13:02:29 by amaula           ###   ########.fr       */
+/*   Updated: 2024/09/20 15:21:14 by amaula           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,12 @@
 
 # define SUCCESS 1
 # define FAILURE 0
+
+typedef struct s_simulation
+{
+	pthread_mutex_t	*mutex;
+	int				value;
+}	t_simulation;
 
 typedef struct s_fork
 {
@@ -47,7 +53,8 @@ typedef struct s_time_set
 typedef struct s_philo
 {
 	int				id;
-	int				*all_alive;
+	t_simulation	*simulation;
+	int				is_eating;
 	t_fork			*left;
 	t_fork			*right;
 	t_time_set		*time;
@@ -64,6 +71,8 @@ typedef struct s_session
 	t_fork			*forks;
 }	t_session;
 
+int				simulation_finished(t_simulation *simulation);
+void			*watch(void *ptr);
 int				validate(int argc, char **argv);
 int				min(int a, int b);
 void			print_log(t_philo *philo, char *message);
@@ -72,8 +81,6 @@ int				lock_forks(t_philo *philo);
 void			unlock_forks(t_philo *philo);
 long			timestamp(t_time_set *time);
 long			get_ms(void);
-void			take_forks(t_philo *philo);
-void			return_forks(t_philo *philo);
 int				get_hunger(t_philo *philo);
 unsigned int	ft_atoi(char *string);
 t_time_set		*time_settings(int argc, char **argv);

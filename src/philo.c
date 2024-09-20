@@ -6,7 +6,7 @@
 /*   By: amaula <amaula@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:53:14 by amaula            #+#    #+#             */
-/*   Updated: 2024/09/13 12:53:16 by amaula           ###   ########.fr       */
+/*   Updated: 2024/09/20 15:23:33 by amaula           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,12 @@ static void	init_philos(t_session *ses, t_time_set *time)
 {
 	unsigned int	i;
 	t_philo			*philo;
-	int				*all_alive;
+	t_simulation	*simulation;
 
-	all_alive = malloc(sizeof(int));
-	*all_alive = 1;
+	simulation = malloc(sizeof(t_simulation));
+	simulation->value = 1;
+	simulation->mutex = malloc(sizeof(pthread_mutex_t));
+	pthread_mutex_init(simulation->mutex, NULL);
 	give_forks(ses);
 	i = 0;
 	while (i < ses->n)
@@ -29,7 +31,8 @@ static void	init_philos(t_session *ses, t_time_set *time)
 		philo->time = time;
 		philo->last_meal = 0;
 		philo->times_eaten = 0;
-		philo->all_alive = all_alive;
+		philo->simulation = simulation;
+		philo->is_eating = 0;
 		philo->mutex = malloc(sizeof(pthread_mutex_t));
 		pthread_mutex_init(philo->mutex, NULL);
 		i++;
