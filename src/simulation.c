@@ -6,7 +6,7 @@
 /*   By: amaula <amaula@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:53:57 by amaula            #+#    #+#             */
-/*   Updated: 2024/09/20 16:56:33 by amaula           ###   ########.fr       */
+/*   Updated: 2024/10/01 13:17:48 by amaula           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ static void	philo_eat(t_philo *philo)
 	while (timestamp(philo->time) - start_eating < philo->time->eat)
 		usleep(1000);
 	unlock_forks(philo);
-	philo->last_meal = timestamp(philo->time);
 	pthread_mutex_lock(philo->mutex);
+	philo->last_meal = timestamp(philo->time);
 	philo->times_eaten++;
 	philo->is_eating = 0;
 	pthread_mutex_unlock(philo->mutex);

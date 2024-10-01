@@ -6,7 +6,7 @@
 /*   By: amaula <amaula@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:53:45 by amaula            #+#    #+#             */
-/*   Updated: 2024/09/20 15:21:14 by amaula           ###   ########.fr       */
+/*   Updated: 2024/10/01 13:19:22 by amaula           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,6 @@ typedef struct s_simulation
 	int				value;
 }	t_simulation;
 
-typedef struct s_fork
-{
-	pthread_mutex_t	*mutex;
-	int				is_locked;
-}	t_fork;
-
 /* n = number_of_philosophers 
  * die = time_to_die
  * eat = time_to_eat
@@ -55,8 +49,8 @@ typedef struct s_philo
 	int				id;
 	t_simulation	*simulation;
 	int				is_eating;
-	t_fork			*left;
-	t_fork			*right;
+	pthread_mutex_t	*left;
+	pthread_mutex_t	*right;
 	t_time_set		*time;
 	int				last_meal;
 	int				times_eaten;
@@ -68,7 +62,7 @@ typedef struct s_session
 	unsigned int	n;
 	pthread_t		*threads;
 	t_philo			*philos;
-	t_fork			*forks;
+	pthread_mutex_t	*forks;
 }	t_session;
 
 int				simulation_finished(t_simulation *simulation);

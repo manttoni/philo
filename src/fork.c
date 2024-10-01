@@ -6,7 +6,7 @@
 /*   By: amaula <amaula@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:53:24 by amaula            #+#    #+#             */
-/*   Updated: 2024/09/20 15:18:43 by amaula           ###   ########.fr       */
+/*   Updated: 2024/10/01 13:23:29 by amaula           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,8 @@ void	give_forks(t_session *ses)
 	i = 0;
 	while (i < ses->n)
 	{
-		ses->forks[i].mutex = malloc(sizeof(pthread_mutex_t));
-		ses->forks[i].is_locked = 0;
-		pthread_mutex_init(ses->forks[i].mutex, NULL);
+		//ses->forks[i] = malloc(sizeof(pthread_mutex_t));
+		pthread_mutex_init(&ses->forks[i], NULL);
 		ses->philos[i].right = &ses->forks[i];
 		if (i + 1 >= ses->n)
 		{
@@ -35,11 +34,11 @@ void	give_forks(t_session *ses)
 
 int	lock_forks(t_philo *philo)
 {
-	pthread_mutex_lock(philo->left->mutex);
+	pthread_mutex_lock(philo->left);
 	if (simulation_finished(philo->simulation))
 		return (0);
 	print_log(philo, "has taken a fork");
-	pthread_mutex_lock(philo->right->mutex);
+	pthread_mutex_lock(philo->right);
 	if (simulation_finished(philo->simulation))
 		return (0);
 	print_log(philo, "has taken a fork");
@@ -48,6 +47,6 @@ int	lock_forks(t_philo *philo)
 
 void	unlock_forks(t_philo *philo)
 {
-	pthread_mutex_unlock(philo->left->mutex);
-	pthread_mutex_unlock(philo->right->mutex);
+	pthread_mutex_unlock(philo->left);
+	pthread_mutex_unlock(philo->right);
 }

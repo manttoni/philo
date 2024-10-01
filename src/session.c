@@ -6,7 +6,7 @@
 /*   By: amaula <amaula@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:53:52 by amaula            #+#    #+#             */
-/*   Updated: 2024/09/20 15:28:19 by amaula           ###   ########.fr       */
+/*   Updated: 2024/10/01 13:23:52 by amaula           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	free_session(t_session *ses)
 	while (i < ses->n)
 	{
 		free(ses->philos[i].mutex);
-		free(ses->forks[i].mutex);
+		//free(ses->forks[i]);
 		i++;
 	}
 	free(ses->philos->time);
@@ -42,7 +42,7 @@ t_session	*create_session(unsigned int n)
 	ses->n = n;
 	ses->philos = malloc(ses->n * sizeof(t_philo));
 	ses->threads = malloc(ses->n * sizeof(pthread_t));
-	ses->forks = malloc(ses->n * sizeof(t_fork));
+	ses->forks = malloc(ses->n * sizeof(pthread_mutex_t));
 	if (!ses->philos || !ses->threads || !ses->forks)
 	{
 		free_session(ses);
