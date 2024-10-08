@@ -6,7 +6,7 @@
 /*   By: amaula <amaula@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:53:52 by amaula            #+#    #+#             */
-/*   Updated: 2024/10/01 13:23:52 by amaula           ###   ########.fr       */
+/*   Updated: 2024/10/08 19:08:19 by amaula           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,22 @@ void	free_session(t_session *ses)
 	unsigned int	i;
 
 	i = 0;
-	while (i < ses->n)
+	if (ses->philos)
 	{
-		free(ses->philos[i].mutex);
-		//free(ses->forks[i]);
-		i++;
+		while (i < ses->n)
+		{
+			free(ses->philos[i].mutex);
+			i++;
+		}
+		free(ses->philos->time);
+		free(ses->philos->simulation->mutex);
+		free(ses->philos->simulation);
+		free(ses->philos);
 	}
-	free(ses->philos->time);
-	free(ses->philos->simulation->mutex);
-	free(ses->philos->simulation);
-	free(ses->philos);
-	free(ses->threads);
-	free(ses->forks);
+	if (ses->threads)
+		free(ses->threads);
+	if (ses->forks)
+		free(ses->forks);
 	free(ses);
 }
 
@@ -45,6 +49,7 @@ t_session	*create_session(unsigned int n)
 	ses->forks = malloc(ses->n * sizeof(pthread_mutex_t));
 	if (!ses->philos || !ses->threads || !ses->forks)
 	{
+		printf("Malloc failed.\n");
 		free_session(ses);
 		exit(1);
 	}

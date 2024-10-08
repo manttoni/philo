@@ -6,7 +6,7 @@
 /*   By: amaula <amaula@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:53:57 by amaula            #+#    #+#             */
-/*   Updated: 2024/10/08 14:13:22 by amaula           ###   ########.fr       */
+/*   Updated: 2024/10/08 18:28:34 by amaula           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,12 @@ int	simulation_finished(t_simulation *sim)
 	return (0);
 }
 
-static void	philo_eat(t_philo *philo)
+static int	philo_eat(t_philo *philo)
 {
 	int	start_eating;
 
 	if (lock_forks(philo) == 0)
-		return ;
+		return (0);
 	pthread_mutex_lock(philo->mutex);
 	philo->is_eating = 1;
 	pthread_mutex_unlock(philo->mutex);
@@ -40,8 +40,7 @@ static void	philo_eat(t_philo *philo)
 		if (simulation_finished(philo->simulation) == 1)
 		{
 			unlock_forks(philo);
-			pthread_mutex_unlock(philo->mutex);
-			return ;
+			return (0);
 		}
 		usleep(1000);
 	}
@@ -51,9 +50,10 @@ static void	philo_eat(t_philo *philo)
 	philo->times_eaten++;
 	philo->is_eating = 0;
 	pthread_mutex_unlock(philo->mutex);
+	return (1);
 }
 
-static void	philo_sleep(t_philo *philo)
+static int	philo_sleep(t_philo *philo)
 {
 	int	start_sleeping;
 
@@ -64,11 +64,11 @@ static void	philo_sleep(t_philo *philo)
 		if (simulation_finished(philo->simulation) == 1)
 		{
 			unlock_forks(philo);
-			pthread_mutex_unlock(philo->mutex);
-			return ;
+			return (0);
 		}
 		usleep(1000);
 	}
+	return (1);
 }
 
 static void	philo_think(t_philo *philo)
@@ -95,11 +95,9 @@ void	*simulate(void *ptr)
 		usleep(1000);
 	while (simulation_finished(philo->simulation) == 0)
 	{
-		philo_eat(philo);
-		if (simulation_finished(philo->simulation) == 1)
+		if (philo_eat(philo) == 0)
 			break ;
-		philo_sleep(philo);
-		if (simulation_finished(philo->simulation) == 1)
+		if (philo_sleep(philo) == 0)
 			break ;
 		philo_think(philo);
 	}

@@ -6,7 +6,7 @@
 /*   By: amaula <amaula@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:53:24 by amaula            #+#    #+#             */
-/*   Updated: 2024/10/01 13:23:29 by amaula           ###   ########.fr       */
+/*   Updated: 2024/10/08 18:35:29 by amaula           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void	give_forks(t_session *ses)
 	i = 0;
 	while (i < ses->n)
 	{
-		//ses->forks[i] = malloc(sizeof(pthread_mutex_t));
 		pthread_mutex_init(&ses->forks[i], NULL);
 		ses->philos[i].right = &ses->forks[i];
 		if (i + 1 >= ses->n)

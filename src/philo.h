@@ -6,7 +6,7 @@
 /*   By: amaula <amaula@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:53:45 by amaula            #+#    #+#             */
-/*   Updated: 2024/10/01 13:19:22 by amaula           ###   ########.fr       */
+/*   Updated: 2024/10/08 18:48:50 by amaula           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,7 @@
 # include <unistd.h>
 # include <time.h>
 # include <sys/time.h>
-
-# define SUCCESS 1
-# define FAILURE 0
+# include <limits.h>
 
 typedef struct s_simulation
 {

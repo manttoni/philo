@@ -6,7 +6,7 @@
 /*   By: amaula <amaula@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 13:15:34 by amaula            #+#    #+#             */
-/*   Updated: 2024/10/08 14:15:04 by amaula           ###   ########.fr       */
+/*   Updated: 2024/10/08 18:36:10 by amaula           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ static void	check_satisfaction(t_session *ses)
 void	unlock_all_forks(t_session *ses)
 {
 	unsigned int	i;
-	
+
 	i = 0;
 	while (i < ses->n)
 	{
