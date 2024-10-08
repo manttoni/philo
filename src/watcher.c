@@ -6,7 +6,7 @@
 /*   By: amaula <amaula@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 13:15:34 by amaula            #+#    #+#             */
-/*   Updated: 2024/09/20 16:53:45 by amaula           ###   ########.fr       */
+/*   Updated: 2024/10/08 14:15:04 by amaula           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ static void	check_satisfaction(t_session *ses)
 		i++;
 	}
 	finish_simulation(philo->simulation);
-	printf("Everyone has eaten!\n");
 }
 
 void	unlock_all_forks(t_session *ses)

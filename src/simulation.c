@@ -6,7 +6,7 @@
 /*   By: amaula <amaula@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:53:57 by amaula            #+#    #+#             */
-/*   Updated: 2024/10/01 13:17:48 by amaula           ###   ########.fr       */
+/*   Updated: 2024/10/08 14:13:22 by amaula           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,15 @@ static void	philo_eat(t_philo *philo)
 	print_log(philo, "is eating");
 	start_eating = timestamp(philo->time);
 	while (timestamp(philo->time) - start_eating < philo->time->eat)
+	{
+		if (simulation_finished(philo->simulation) == 1)
+		{
+			unlock_forks(philo);
+			pthread_mutex_unlock(philo->mutex);
+			return ;
+		}
 		usleep(1000);
+	}
 	unlock_forks(philo);
 	pthread_mutex_lock(philo->mutex);
 	philo->last_meal = timestamp(philo->time);
@@ -52,14 +60,30 @@ static void	philo_sleep(t_philo *philo)
 	print_log(philo, "is sleeping");
 	start_sleeping = timestamp(philo->time);
 	while (timestamp(philo->time) - start_sleeping < philo->time->sleep)
+	{
+		if (simulation_finished(philo->simulation) == 1)
+		{
+			unlock_forks(philo);
+			pthread_mutex_unlock(philo->mutex);
+			return ;
+		}
 		usleep(1000);
+	}
 }
 
 static void	philo_think(t_philo *philo)
 {
 	print_log(philo, "is thinking");
 	while (get_hunger(philo) < 0)
+	{
+		if (simulation_finished(philo->simulation) == 1)
+		{
+			unlock_forks(philo);
+			pthread_mutex_unlock(philo->mutex);
+			return ;
+		}
 		usleep(1000);
+	}
 }
 
 void	*simulate(void *ptr)
