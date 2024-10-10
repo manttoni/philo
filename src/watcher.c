@@ -6,7 +6,7 @@
 /*   By: amaula <amaula@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 13:15:34 by amaula            #+#    #+#             */
-/*   Updated: 2024/10/08 18:36:10 by amaula           ###   ########.fr       */
+/*   Updated: 2024/10/10 12:15:31 by amaula           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ static int	check_death(t_session *ses)
 		pthread_mutex_lock(philo->mutex);
 		if (get_hunger(philo) >= 100 && philo->is_eating == 0)
 		{
+			print_log(philo, "died");			
 			finish_simulation(philo->simulation);
-			print_log(philo, "died");
 			pthread_mutex_unlock(philo->mutex);
 			return (1);
 		}

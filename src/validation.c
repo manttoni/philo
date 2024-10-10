@@ -6,7 +6,7 @@
 /*   By: amaula <amaula@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:54:10 by amaula            #+#    #+#             */
-/*   Updated: 2024/10/08 19:42:17 by amaula           ###   ########.fr       */
+/*   Updated: 2024/10/10 12:02:33 by amaula           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,16 @@ unsigned int	ft_atoi(char *string)
 		ret += *string - '0';
 		string++;
 		if (ret > INT_MAX)
+		{
+			printf("Overflow error");
 			return (0);
+		}
 	}
 	if (*string)
+	{
+		printf("Value error");
 		return (0);
+	}
 	return ((int)ret);
 }
 
@@ -53,8 +59,7 @@ int	validate(int argc, char **argv)
 	if (argc != 5 && argc != 6)
 	{
 		printf("Wrong amount of arguments!\n");
-		printf("\t<number_of_philosophers> [1 - ~8000000]");
-		printf(" Or ~400 if using valgrind\n");
+		printf("\t<number_of_philosophers> [1 - ~8000000]\n");
 		printf("\t<time_to_die>\n");
 		printf("\t<time_to_eat>\n\t<time_to_sleep>\n");
 		printf("\t[number_of_times_each_philosopher_must_eat] <- optional\n");
@@ -66,7 +71,7 @@ int	validate(int argc, char **argv)
 	{
 		if (ft_atoi(argv[i]) == 0)
 		{
-			printf("Invalid argument: index %d\n", i);
+			printf(": index %d\n", i);
 			return (0);
 		}
 		i++;
