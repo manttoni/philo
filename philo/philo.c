@@ -12,16 +12,30 @@
 
 #include "philo.h"
 
-static void	init_philos(t_session *ses, t_time_set *time)
+static t_simulation	*init_simulation(void)
+{
+	t_simulation	*simulation;
+
+	simulation = malloc(sizeof(t_simulation));
+	if (!simulation)
+		return (NULL);
+	simulation->status = 0;
+	simulation->mutex = malloc(sizeof(pthread_mutex_t));
+	if (!simulation->mutex)
+		return (NULL);
+	pthread_mutex_init(simulation->mutex, NULL);
+	return (simulation);
+}
+
+static int	init_philos(t_session *ses, t_time_set *time)
 {
 	unsigned int	i;
 	t_philo			*philo;
 	t_simulation	*simulation;
 
-	simulation = malloc(sizeof(t_simulation));
-	simulation->status = 0;
-	simulation->mutex = malloc(sizeof(pthread_mutex_t));
-	pthread_mutex_init(simulation->mutex, NULL);
+	simulation = init_simulation();
+	if (simulation == NULL)
+		return (0);
 	give_forks(ses);
 	i = 0;
 	while (i < ses->n)
@@ -29,13 +43,14 @@ static void	init_philos(t_session *ses, t_time_set *time)
 		philo = &ses->philos[i];
 		philo->id = i + 1;
 		philo->time = time;
-		philo->last_meal = 0;
-		philo->times_eaten = 0;
 		philo->simulation = simulation;
 		philo->mutex = malloc(sizeof(pthread_mutex_t));
+		if (!philo->mutex)
+			return (0);
 		pthread_mutex_init(philo->mutex, NULL);
 		i++;
 	}
+	return (1);
 }
 
 t_time_set	*init_time(int argc, char **argv)
@@ -53,7 +68,10 @@ t_time_set	*init_time(int argc, char **argv)
 		time->times = ft_atoi(argv[5]);
 	time->log_mutex = malloc(sizeof(pthread_mutex_t));
 	if (!time->log_mutex)
+	{
+		free(time);
 		return (NULL);
+	}
 	pthread_mutex_init(time->log_mutex, NULL);
 	return (time);
 }
@@ -76,8 +94,8 @@ int	main(int argc, char **argv)
 		free(time);
 		return (1);
 	}
-	init_philos(ses, time);
-	start_session(ses);
+	if (init_philos(ses, time) == 1)
+		start_session(ses);
 	free_session(ses);
 	return (0);
 }

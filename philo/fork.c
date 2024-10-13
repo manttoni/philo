@@ -42,12 +42,26 @@ int	take_fork(t_philo *philo, pthread_mutex_t *fork)
 
 int	lock_forks(t_philo *philo)
 {
-	if (take_fork(philo, philo->left) == 0)
+	if (philo->id % 2 == 0)
 	{
-		pthread_mutex_unlock(philo->left);
-		return (0);
+		if (take_fork(philo, philo->left) == 0)
+		{
+			pthread_mutex_unlock(philo->left);
+			return (0);
+		}
+		if (take_fork(philo, philo->right) == 0)
+		{
+			unlock_forks(philo);
+			return (0);
+		}
+		return (1);
 	}
 	if (take_fork(philo, philo->right) == 0)
+	{
+		pthread_mutex_unlock(philo->right);
+		return (0);
+	}
+	if (take_fork(philo, philo->left) == 0)
 	{
 		unlock_forks(philo);
 		return (0);

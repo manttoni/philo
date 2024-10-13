@@ -61,8 +61,8 @@ void	*simulate(void *ptr)
 	philo = (t_philo *)ptr;
 	while (get_status(philo->simulation) == 0)
 		usleep(100);
-	if (philo->id % 2 == 0)
-		usleep(1000);
+	//if (philo->id % 2 == 0)
+	//	usleep(1000);
 	while (get_status(philo->simulation) == 1)
 	{
 		if (philo_eat(philo) == 0)
