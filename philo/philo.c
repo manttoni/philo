@@ -19,7 +19,7 @@ static void	init_philos(t_session *ses, t_time_set *time)
 	t_simulation	*simulation;
 
 	simulation = malloc(sizeof(t_simulation));
-	simulation->value = 1;
+	simulation->status = 0;
 	simulation->mutex = malloc(sizeof(pthread_mutex_t));
 	pthread_mutex_init(simulation->mutex, NULL);
 	give_forks(ses);
@@ -32,7 +32,6 @@ static void	init_philos(t_session *ses, t_time_set *time)
 		philo->last_meal = 0;
 		philo->times_eaten = 0;
 		philo->simulation = simulation;
-		philo->is_eating = 0;
 		philo->mutex = malloc(sizeof(pthread_mutex_t));
 		pthread_mutex_init(philo->mutex, NULL);
 		i++;
@@ -49,9 +48,13 @@ t_time_set	*init_time(int argc, char **argv)
 	time->die = ft_atoi(argv[2]);
 	time->eat = ft_atoi(argv[3]);
 	time->sleep = ft_atoi(argv[4]);
-	time->times = -1;
+	time->times = 0;
 	if (argc == 6)
 		time->times = ft_atoi(argv[5]);
+	time->log_mutex = malloc(sizeof(pthread_mutex_t));
+	if (!time->log_mutex)
+		return (NULL);
+	pthread_mutex_init(time->log_mutex, NULL);
 	return (time);
 }
 

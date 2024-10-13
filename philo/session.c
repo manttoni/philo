@@ -57,26 +57,54 @@ t_session	*create_session(unsigned int n)
 	return (ses);
 }
 
-void	start_session(t_session *ses)
+int	create_threads(t_session *ses, pthread_t *watcher)
 {
 	unsigned int	i;
-	void			*s;
-	pthread_t		watcher;
+	t_philo			*philo;
+	pthread_t		*thread;
 
-	s = simulate;
 	i = 0;
-	ses->philos->time->simul_start = get_ms();
 	while (i < ses->n)
 	{
-		pthread_create(ses->threads + i, NULL, s, (void *)(ses->philos + i));
+		thread = ses->threads + i;
+		philo = ses->philos + i;
+		if (pthread_create(thread, NULL, simulate, philo) != 0)
+			return (-1);
 		i++;
 	}
-	pthread_create(&watcher, NULL, watch, ses);
+	if (pthread_create(watcher, NULL, watch, ses) != 0)
+		return (-1);
+	return (1);
+}
+
+void	join_threads(t_session *ses, pthread_t *watcher)
+{
+	unsigned int	i;
+
 	i = 0;
 	while (i < ses->n)
 	{
 		pthread_join(*(ses->threads + i), NULL);
 		i++;
 	}
-	pthread_join(watcher, NULL);
+	pthread_join(*watcher, NULL);
+	free(watcher);
+}
+
+void	start_session(t_session *ses)
+{
+	pthread_t	*watcher;
+	int			status;
+
+	watcher = malloc(sizeof(pthread_t));
+	status = create_threads(ses, watcher);
+	ses->philos->time->simul_start = get_ms();
+	set_status(ses->philos->simulation, status);
+	if (status == -1)
+	{
+		pthread_mutex_lock(ses->philos->time->log_mutex);
+		printf("Error!\n");
+		pthread_mutex_unlock(ses->philos->time->log_mutex);
+	}
+	join_threads(ses, watcher);
 }

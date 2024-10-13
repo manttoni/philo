@@ -19,8 +19,9 @@ long	timestamp(t_time_set *t)
 
 void	print_log(t_philo *philo, char *message)
 {
-	if (simulation_finished(philo->simulation) == 0)
-		printf("%ld %d %s\n", timestamp(philo->time), philo->id, message);
+	pthread_mutex_lock(philo->time->log_mutex);
+	printf("%ld %d %s\n", timestamp(philo->time), philo->id, message);
+	pthread_mutex_unlock(philo->time->log_mutex);
 }
 
 long	get_ms(void)

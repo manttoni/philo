@@ -12,11 +12,18 @@
 
 #include "philo.h"
 
-void	finish_simulation(t_simulation *simulation)
+static int	is_dead(t_philo *philo)
 {
-	pthread_mutex_lock(simulation->mutex);
-	simulation->value = 0;
-	pthread_mutex_unlock(simulation->mutex);
+	unsigned int	last_meal;
+	unsigned int	now;
+	unsigned int	time_since_meal;
+
+	pthread_mutex_lock(philo->mutex);
+	last_meal = philo->last_meal;
+	pthread_mutex_unlock(philo->mutex);
+	now = timestamp(philo->time);
+	time_since_meal = now - last_meal;
+	return (time_since_meal >= philo->time->die);
 }
 
 static int	check_death(t_session *ses)
@@ -28,15 +35,12 @@ static int	check_death(t_session *ses)
 	while (i < ses->n)
 	{
 		philo = &ses->philos[i];
-		pthread_mutex_lock(philo->mutex);
-		if (get_hunger(philo) >= 100)
+		if (is_dead(philo) == 1)
 		{
 			print_log(philo, "died");
-			finish_simulation(philo->simulation);
-			pthread_mutex_unlock(philo->mutex);
+			set_status(philo->simulation, 0);
 			return (1);
 		}
-		pthread_mutex_unlock(philo->mutex);
 		i++;
 	}
 	return (0);
@@ -60,19 +64,7 @@ static void	check_satisfaction(t_session *ses)
 		pthread_mutex_unlock(philo->mutex);
 		i++;
 	}
-	finish_simulation(philo->simulation);
-}
-
-void	unlock_all_forks(t_session *ses)
-{
-	unsigned int	i;
-
-	i = 0;
-	while (i < ses->n)
-	{
-		unlock_forks(&ses->philos[i]);
-		i++;
-	}
+	set_status(philo->simulation, 0);
 }
 
 void	*watch(void *ptr)
@@ -80,12 +72,13 @@ void	*watch(void *ptr)
 	t_session	*ses;
 
 	ses = (t_session *)ptr;
-	while (simulation_finished(ses->philos->simulation) == 0)
+	while (get_status(ses->philos->simulation) == 0)
+		usleep(100);
+	while (get_status(ses->philos->simulation) == 1)
 	{
 		if (check_death(ses) == 0)
 			if (ses->philos->time->times > 0)
 				check_satisfaction(ses);
 	}
-	unlock_all_forks(ses);
 	return (NULL);
 }

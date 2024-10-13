@@ -12,18 +12,6 @@
 
 #include "philo.h"
 
-int	simulation_finished(t_simulation *sim)
-{
-	pthread_mutex_lock(sim->mutex);
-	if (sim->value == 0)
-	{
-		pthread_mutex_unlock(sim->mutex);
-		return (1);
-	}
-	pthread_mutex_unlock(sim->mutex);
-	return (0);
-}
-
 static int	philo_eat(t_philo *philo)
 {
 	int	start_eating;
@@ -37,7 +25,7 @@ static int	philo_eat(t_philo *philo)
 	print_log(philo, "is eating");
 	while (timestamp(philo->time) - start_eating < philo->time->eat)
 	{
-		if (simulation_finished(philo->simulation) == 1)
+		if (get_status(philo->simulation) == 0)
 		{
 			unlock_forks(philo);
 			return (0);
@@ -59,29 +47,11 @@ static int	philo_sleep(t_philo *philo)
 	start_sleeping = timestamp(philo->time);
 	while (timestamp(philo->time) - start_sleeping < philo->time->sleep)
 	{
-		if (simulation_finished(philo->simulation) == 1)
-		{
-			unlock_forks(philo);
+		if (get_status(philo->simulation) == 0)
 			return (0);
-		}
 		usleep(1000);
 	}
 	return (1);
-}
-
-static void	philo_think(t_philo *philo)
-{
-	print_log(philo, "is thinking");
-	while (get_hunger(philo) < 0)
-	{
-		if (simulation_finished(philo->simulation) == 1)
-		{
-			unlock_forks(philo);
-			pthread_mutex_unlock(philo->mutex);
-			return ;
-		}
-		usleep(1000);
-	}
 }
 
 void	*simulate(void *ptr)
@@ -89,15 +59,17 @@ void	*simulate(void *ptr)
 	t_philo		*philo;
 
 	philo = (t_philo *)ptr;
+	while (get_status(philo->simulation) == 0)
+		usleep(100);
 	if (philo->id % 2 == 0)
 		usleep(1000);
-	while (simulation_finished(philo->simulation) == 0)
+	while (get_status(philo->simulation) == 1)
 	{
 		if (philo_eat(philo) == 0)
 			break ;
 		if (philo_sleep(philo) == 0)
 			break ;
-		philo_think(philo);
+		print_log(philo, "is thinking");
 	}
 	return (NULL);
 }

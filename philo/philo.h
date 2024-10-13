@@ -25,7 +25,7 @@
 typedef struct s_simulation
 {
 	pthread_mutex_t	*mutex;
-	int				value;
+	int				status;
 }	t_simulation;
 
 /* n = number_of_philosophers 
@@ -35,23 +35,23 @@ typedef struct s_simulation
  * times = [number_of_times_each_philosopher_must_eat]*/
 typedef struct s_time_set
 {
+	long			simul_start;
 	unsigned int	die;
 	unsigned int	eat;
 	unsigned int	sleep;
-	int				times;
-	long			simul_start;
+	unsigned int	times;
+	pthread_mutex_t	*log_mutex;
 }	t_time_set;
 
 typedef struct s_philo
 {
-	int				id;
+	unsigned int	id;
+	unsigned int	last_meal;
+	unsigned int	times_eaten;
 	t_simulation	*simulation;
-	int				is_eating;
+	t_time_set		*time;
 	pthread_mutex_t	*left;
 	pthread_mutex_t	*right;
-	t_time_set		*time;
-	int				last_meal;
-	int				times_eaten;
 	pthread_mutex_t	*mutex;
 }	t_philo;
 
@@ -63,24 +63,21 @@ typedef struct s_session
 	pthread_mutex_t	*forks;
 }	t_session;
 
-int				simulation_finished(t_simulation *simulation);
 void			*watch(void *ptr);
 int				validate(int argc, char **argv);
-int				min(int a, int b);
 void			print_log(t_philo *philo, char *message);
-void			monitor_session(t_session *ses);
 int				lock_forks(t_philo *philo);
 void			unlock_forks(t_philo *philo);
 long			timestamp(t_time_set *time);
 long			get_ms(void);
-int				get_hunger(t_philo *philo);
 unsigned int	ft_atoi(char *string);
 t_time_set		*time_settings(int argc, char **argv);
 void			give_forks(t_session *ses);
 void			start_session(t_session *ses);
 void			free_session(t_session *ses);
 t_session		*create_session(unsigned int n);
-void			print_session(t_session *ses);
 void			*simulate(void *ptr);
+void			set_status(t_simulation *sim, int status);
+int				get_status(t_simulation *sim);
 
 #endif
