@@ -98,6 +98,8 @@ void	start_session(t_session *ses)
 	int			status;
 
 	watcher = malloc(sizeof(pthread_t));
+	if (watcher == NULL)
+		return ;
 	status = create_threads(ses, watcher);
 	ses->philos->time->simul_start = get_ms();
 	set_status(ses->philos->simulation, status);
