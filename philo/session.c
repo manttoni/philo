@@ -58,7 +58,7 @@ t_session	*create_session(unsigned int n)
 	return (ses);
 }
 
-int	create_threads(t_session *ses, pthread_t *watcher)
+static int	create_threads(t_session *ses, pthread_t *watcher)
 {
 	unsigned int	i;
 	t_philo			*philo;
@@ -78,7 +78,7 @@ int	create_threads(t_session *ses, pthread_t *watcher)
 	return (1);
 }
 
-void	join_threads(t_session *ses, pthread_t *watcher)
+static void	join_threads(t_session *ses, pthread_t *watcher)
 {
 	unsigned int	i;
 
