@@ -67,9 +67,17 @@ typedef struct s_session
 	pthread_mutex_t	*forks;
 }	t_session;
 
+typedef struct s_log
+{
+	pthread_mutex_t	*mutex;
+	unsigned int	id;
+	long			time;
+	char			*message;
+}	t_log;
+
+void			log_message(t_philo *philo, char *message);
 void			*watch(void *ptr);
 int				validate(int argc, char **argv);
-void			print_log(t_philo *philo, char *message);
 int				lock_forks(t_philo *philo);
 void			unlock_forks(t_philo *philo);
 long			timestamp(t_time_set *time);

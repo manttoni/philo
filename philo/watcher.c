@@ -37,7 +37,7 @@ static int	check_death(t_session *ses)
 		philo = &ses->philos[i];
 		if (is_dead(philo) == 1)
 		{
-			print_log(philo, "died");
+			log_message(philo, "died");
 			set_status(philo->simulation, 0);
 			return (1);
 		}

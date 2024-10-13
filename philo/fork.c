@@ -34,7 +34,7 @@ void	give_forks(t_session *ses)
 static void	take_fork(t_philo *philo, pthread_mutex_t *fork)
 {
 	pthread_mutex_lock(fork);
-	print_log(philo, "has taken a fork");
+	log_message(philo, "has taken a fork");
 }
 
 int	lock_forks(t_philo *philo)

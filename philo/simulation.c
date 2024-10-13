@@ -25,7 +25,7 @@ static int	philo_eat(t_philo *philo)
 	philo->last_meal = timestamp(philo->time);
 	start_eating = philo->last_meal;
 	pthread_mutex_unlock(philo->mutex);
-	print_log(philo, "is eating");
+	log_message(philo, "is eating");
 	while (timestamp(philo->time) - start_eating < philo->time->eat)
 	{
 		if (get_status(philo->simulation) == 0)
@@ -46,7 +46,7 @@ static int	philo_sleep(t_philo *philo)
 {
 	int	start_sleeping;
 
-	print_log(philo, "is sleeping");
+	log_message(philo, "is sleeping");
 	start_sleeping = timestamp(philo->time);
 	while (timestamp(philo->time) - start_sleeping < philo->time->sleep)
 	{
@@ -72,7 +72,7 @@ void	*simulate(void *ptr)
 			break ;
 		if (philo_sleep(philo) == 0)
 			break ;
-		print_log(philo, "is thinking");
+		log_message(philo, "is thinking");
 		usleep(1000);
 	}
 	return (NULL);
