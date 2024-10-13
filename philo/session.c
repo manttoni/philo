@@ -24,6 +24,7 @@ void	free_session(t_session *ses)
 			free(ses->philos[i].mutex);
 			i++;
 		}
+		free(ses->philos->time->log_mutex);
 		free(ses->philos->time);
 		free(ses->philos->simulation->mutex);
 		free(ses->philos->simulation);
@@ -100,11 +101,5 @@ void	start_session(t_session *ses)
 	status = create_threads(ses, watcher);
 	ses->philos->time->simul_start = get_ms();
 	set_status(ses->philos->simulation, status);
-	if (status == -1)
-	{
-		pthread_mutex_lock(ses->philos->time->log_mutex);
-		printf("Error!\n");
-		pthread_mutex_unlock(ses->philos->time->log_mutex);
-	}
 	join_threads(ses, watcher);
 }

@@ -20,7 +20,8 @@ long	timestamp(t_time_set *t)
 void	print_log(t_philo *philo, char *message)
 {
 	pthread_mutex_lock(philo->time->log_mutex);
-	printf("%ld %d %s\n", timestamp(philo->time), philo->id, message);
+	if (get_status(philo->simulation) == 1)
+		printf("%ld %d %s\n", timestamp(philo->time), philo->id, message);
 	pthread_mutex_unlock(philo->time->log_mutex);
 }
 

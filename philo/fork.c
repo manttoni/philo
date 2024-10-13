@@ -35,10 +35,7 @@ int	take_fork(t_philo *philo, pthread_mutex_t *fork)
 {
 	pthread_mutex_lock(fork);
 	if (get_status(philo->simulation) == 0)
-	{
-		pthread_mutex_unlock(fork);
 		return (0);
-	}
 	print_log(philo, "has taken a fork");
 	return (1);
 }
@@ -46,9 +43,15 @@ int	take_fork(t_philo *philo, pthread_mutex_t *fork)
 int	lock_forks(t_philo *philo)
 {
 	if (take_fork(philo, philo->left) == 0)
+	{
+		pthread_mutex_unlock(philo->left);
 		return (0);
+	}
 	if (take_fork(philo, philo->right) == 0)
+	{
+		unlock_forks(philo);
 		return (0);
+	}
 	return (1);
 }
 
