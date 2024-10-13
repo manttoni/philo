@@ -22,6 +22,10 @@
 # include <sys/time.h>
 # include <limits.h>
 
+/* Status:
+ * 	-1: error
+ * 	 0: stop
+ * 	 1: start */
 typedef struct s_simulation
 {
 	pthread_mutex_t	*mutex;
@@ -71,7 +75,6 @@ void			unlock_forks(t_philo *philo);
 long			timestamp(t_time_set *time);
 long			get_ms(void);
 unsigned int	ft_atoi(char *string);
-t_time_set		*time_settings(int argc, char **argv);
 void			give_forks(t_session *ses);
 void			start_session(t_session *ses);
 void			free_session(t_session *ses);
