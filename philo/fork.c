@@ -42,6 +42,8 @@ int	take_fork(t_philo *philo, pthread_mutex_t *fork)
 
 int	lock_forks(t_philo *philo)
 {
+	if (philo->left == philo->right)
+		return (0);
 	if (philo->id % 2 == 0)
 	{
 		if (take_fork(philo, philo->left) == 0)

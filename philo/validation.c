@@ -28,7 +28,7 @@ unsigned int	ft_atoi(char *string)
 			return (0);
 		}
 	}
-	if (*string)
+	if (*string || ret == 0)
 	{
 		printf("Value error");
 		return (0);
@@ -59,7 +59,7 @@ int	validate(int argc, char **argv)
 	if (argc != 5 && argc != 6)
 	{
 		printf("Wrong amount of arguments!\n");
-		printf("\t<number_of_philosophers> [1 - ~8000000]\n");
+		printf("\t<number_of_philosophers>\n");
 		printf("\t<time_to_die>\n");
 		printf("\t<time_to_eat>\n\t<time_to_sleep>\n");
 		printf("\t[number_of_times_each_philosopher_must_eat] <- optional\n");
