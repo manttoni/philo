@@ -64,8 +64,6 @@ void	*simulate(void *ptr)
 	philo = (t_philo *)ptr;
 	while (get_status(philo->simulation) == 0)
 		usleep(100);
-	//if (philo->id % 2 == 0)
-	//	usleep(1000);
 	while (get_status(philo->simulation) == 1)
 	{
 		if (philo_eat(philo) == 0)
@@ -73,7 +71,7 @@ void	*simulate(void *ptr)
 		if (philo_sleep(philo) == 0)
 			break ;
 		print_log(philo, "is thinking");
-		usleep(1000);
+		usleep((philo->time->die - philo->time->eat - philo->time->sleep) * 500);
 	}
 	return (NULL);
 }
