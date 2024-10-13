@@ -31,13 +31,12 @@ void	give_forks(t_session *ses)
 	}
 }
 
-int	take_fork(t_philo *philo, pthread_mutex_t *fork)
+static void	take_fork(t_philo *philo, pthread_mutex_t *fork)
 {
 	pthread_mutex_lock(fork);
 	if (get_status(philo->simulation) == 0)
-		return (0);
+		return ;
 	print_log(philo, "has taken a fork");
-	return (1);
 }
 
 int	lock_forks(t_philo *philo)
@@ -45,30 +44,11 @@ int	lock_forks(t_philo *philo)
 	if (philo->left == philo->right)
 		return (0);
 	if (philo->id % 2 == 0)
-	{
-		if (take_fork(philo, philo->left) == 0)
-		{
-			pthread_mutex_unlock(philo->left);
-			return (0);
-		}
-		if (take_fork(philo, philo->right) == 0)
-		{
-			unlock_forks(philo);
-			return (0);
-		}
-		return (1);
-	}
-	if (take_fork(philo, philo->right) == 0)
-	{
-		pthread_mutex_unlock(philo->right);
-		return (0);
-	}
-	if (take_fork(philo, philo->left) == 0)
-	{
-		unlock_forks(philo);
-		return (0);
-	}
-	return (1);
+		take_fork(philo, philo->left);
+	take_fork(philo, philo->right);
+	if (philo->id % 2 != 0)
+		take_fork(philo, philo->left);
+	return (get_status(philo->simulation));
 }
 
 void	unlock_forks(t_philo *philo)

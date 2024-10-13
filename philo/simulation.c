@@ -17,7 +17,10 @@ static int	philo_eat(t_philo *philo)
 	int	start_eating;
 
 	if (lock_forks(philo) == 0)
+	{
+		unlock_forks(philo);
 		return (0);
+	}
 	pthread_mutex_lock(philo->mutex);
 	philo->last_meal = timestamp(philo->time);
 	start_eating = philo->last_meal;
