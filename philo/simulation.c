@@ -70,6 +70,7 @@ void	*simulate(void *ptr)
 		if (philo_sleep(philo) == 0)
 			break ;
 		print_log(philo, "is thinking");
+		usleep(1000);
 	}
 	return (NULL);
 }
