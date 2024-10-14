@@ -6,7 +6,7 @@
 /*   By: amaula <amaula@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:53:57 by amaula            #+#    #+#             */
-/*   Updated: 2024/10/14 14:18:53 by amaula           ###   ########.fr       */
+/*   Updated: 2024/10/14 15:20:43 by amaula           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void	*simulate(void *ptr)
 	unsigned int	life;
 
 	philo = (t_philo *)ptr;
-	while (get_status(philo->simulation) == 0)
+	while (get_status(philo->simulation) == 2)
 		usleep(100);
 	while (get_status(philo->simulation) == 1)
 	{

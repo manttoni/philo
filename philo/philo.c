@@ -6,7 +6,7 @@
 /*   By: amaula <amaula@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:53:14 by amaula            #+#    #+#             */
-/*   Updated: 2024/10/14 14:51:16 by amaula           ###   ########.fr       */
+/*   Updated: 2024/10/14 15:20:34 by amaula           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static t_simulation	*init_simulation(void)
 	simulation = malloc(sizeof(t_simulation));
 	if (simulation == NULL)
 		return (NULL);
-	simulation->status = 0;
+	simulation->status = 2;
 	simulation->mutex = malloc(sizeof(pthread_mutex_t));
 	if (simulation->mutex == NULL)
 	{

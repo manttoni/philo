@@ -6,7 +6,7 @@
 /*   By: amaula <amaula@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 13:15:34 by amaula            #+#    #+#             */
-/*   Updated: 2024/10/10 16:29:21 by amaula           ###   ########.fr       */
+/*   Updated: 2024/10/14 15:20:51 by amaula           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void	*watch(void *ptr)
 	t_session	*ses;
 
 	ses = (t_session *)ptr;
-	while (get_status(ses->philos->simulation) == 0)
+	while (get_status(ses->philos->simulation) == 2)
 		usleep(100);
 	while (get_status(ses->philos->simulation) == 1)
 	{

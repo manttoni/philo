@@ -6,7 +6,7 @@
 /*   By: amaula <amaula@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:53:52 by amaula            #+#    #+#             */
-/*   Updated: 2024/10/14 14:59:35 by amaula           ###   ########.fr       */
+/*   Updated: 2024/10/14 15:15:16 by amaula           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,5 +113,8 @@ void	start_session(t_session *ses)
 	if (watcher == NULL)
 		return ;
 	created = create_threads(ses, watcher);
+	pthread_mutex_lock(ses->philos->time->log_mutex);
+	printf("Threads created: %d\n", created);
+	pthread_mutex_unlock(ses->philos->time->log_mutex);
 	join_threads(ses, watcher, created);
 }

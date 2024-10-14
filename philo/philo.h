@@ -6,7 +6,7 @@
 /*   By: amaula <amaula@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:53:45 by amaula            #+#    #+#             */
-/*   Updated: 2024/10/08 18:48:50 by amaula           ###   ########.fr       */
+/*   Updated: 2024/10/14 15:22:07 by amaula           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,9 @@
 
 /* Status:
  * 	-1: error
- * 	 0: stop
- * 	 1: start */
+ * 	 0: stop sim
+ * 	 1: start normal
+ *	 2: wait for init */
 typedef struct s_simulation
 {
 	pthread_mutex_t	*mutex;
