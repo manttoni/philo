@@ -6,7 +6,7 @@
 /*   By: amaula <amaula@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:53:52 by amaula            #+#    #+#             */
-/*   Updated: 2024/10/14 15:26:11 by amaula           ###   ########.fr       */
+/*   Updated: 2024/10/14 16:08:28 by amaula           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,26 +17,24 @@ void	free_session(t_session *ses)
 	unsigned int	i;
 
 	i = 0;
-	if (ses->philos != NULL)
+	while (i < ses->n)
 	{
-		while (i < ses->n)
-		{
-			if (ses->philos[i].mutex == NULL)
-				break ;
-			free(ses->philos[i].mutex);
-			i++;
-		}
+		if (ses->philos[i].mutex == NULL)
+			break ;
+		free(ses->philos[i].mutex);
+		i++;
+	}
+	if (ses->philos->time != NULL)
+	{
 		free(ses->philos->time->log_mutex);
 		free(ses->philos->time);
-		if (ses->philos->simulation != NULL)
-			free(ses->philos->simulation->mutex);
-		free(ses->philos->simulation);
-		free(ses->philos);
 	}
-	if (ses->threads)
-		free(ses->threads);
-	if (ses->forks)
-		free(ses->forks);
+	if (ses->philos->simulation != NULL)
+		free(ses->philos->simulation->mutex);
+	free(ses->philos->simulation);
+	free(ses->philos);
+	free(ses->threads);
+	free(ses->forks);
 	free(ses);
 }
 
@@ -54,8 +52,11 @@ t_session	*create_session(unsigned int n)
 	if (!ses->philos || !ses->threads || !ses->forks)
 	{
 		printf("Malloc failed.\n");
-		free_session(ses);
-		exit(1);
+		free(ses->philos);
+		free(ses->threads);
+		free(ses->forks);
+		free(ses);
+		return (NULL);
 	}
 	memset(ses->philos, 0, ses->n * sizeof(t_philo));
 	return (ses);

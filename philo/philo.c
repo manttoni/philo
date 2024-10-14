@@ -6,7 +6,7 @@
 /*   By: amaula <amaula@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:53:14 by amaula            #+#    #+#             */
-/*   Updated: 2024/10/14 15:20:34 by amaula           ###   ########.fr       */
+/*   Updated: 2024/10/14 16:06:28 by amaula           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,11 @@ static int	init_philos(t_session *ses, t_time_set *time)
 
 	simulation = init_simulation();
 	if (simulation == NULL)
+	{
+		free(time->log_mutex);
+		free(time);
 		return (0);
-	give_forks(ses);
+	}
 	i = 0;
 	while (i < ses->n)
 	{
@@ -94,9 +97,11 @@ int	main(int argc, char **argv)
 	ses = create_session(n);
 	if (!ses)
 	{
+		free(time->log_mutex);
 		free(time);
 		return (1);
 	}
+	give_forks(ses);
 	if (init_philos(ses, time) == 1)
 		start_session(ses);
 	free_session(ses);
