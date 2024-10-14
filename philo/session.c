@@ -6,7 +6,7 @@
 /*   By: amaula <amaula@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:53:52 by amaula            #+#    #+#             */
-/*   Updated: 2024/10/08 19:08:19 by amaula           ###   ########.fr       */
+/*   Updated: 2024/10/14 14:59:35 by amaula           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,19 @@ void	free_session(t_session *ses)
 	unsigned int	i;
 
 	i = 0;
-	if (ses->philos)
+	if (ses->philos != NULL)
 	{
 		while (i < ses->n)
 		{
+			if (ses->philos[i].mutex == NULL)
+				break ;
 			free(ses->philos[i].mutex);
 			i++;
 		}
 		free(ses->philos->time->log_mutex);
 		free(ses->philos->time);
-		free(ses->philos->simulation->mutex);
+		if (ses->philos->simulation != NULL)
+			free(ses->philos->simulation->mutex);
 		free(ses->philos->simulation);
 		free(ses->philos);
 	}
@@ -70,38 +73,45 @@ static int	create_threads(t_session *ses, pthread_t *watcher)
 		thread = ses->threads + i;
 		philo = ses->philos + i;
 		if (pthread_create(thread, NULL, simulate, philo) != 0)
-			return (-1);
+		{
+			set_status(ses->philos->simulation, -1);
+			return (i);
+		}
 		i++;
 	}
 	if (pthread_create(watcher, NULL, watch, ses) != 0)
-		return (-1);
-	return (1);
+	{
+		set_status(ses->philos->simulation, -1);
+		return (i);
+	}
+	ses->philos->time->simul_start = get_ms();
+	set_status(ses->philos->simulation, 1);
+	return (i + 1);
 }
 
-static void	join_threads(t_session *ses, pthread_t *watcher)
+static void	join_threads(t_session *ses, pthread_t *watcher, int created)
 {
-	unsigned int	i;
+	int	i;
 
 	i = 0;
-	while (i < ses->n)
+	while (i < created - 1)
 	{
-		pthread_join(*(ses->threads + i), NULL);
+		pthread_join(ses->threads[i], NULL);
 		i++;
 	}
-	pthread_join(*watcher, NULL);
+	if (i < created)
+		pthread_join(*watcher, NULL);
 	free(watcher);
 }
 
 void	start_session(t_session *ses)
 {
 	pthread_t	*watcher;
-	int			status;
+	int			created;
 
 	watcher = malloc(sizeof(pthread_t));
 	if (watcher == NULL)
 		return ;
-	status = create_threads(ses, watcher);
-	ses->philos->time->simul_start = get_ms();
-	set_status(ses->philos->simulation, status);
-	join_threads(ses, watcher);
+	created = create_threads(ses, watcher);
+	join_threads(ses, watcher, created);
 }

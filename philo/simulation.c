@@ -6,11 +6,29 @@
 /*   By: amaula <amaula@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:53:57 by amaula            #+#    #+#             */
-/*   Updated: 2024/10/10 16:36:31 by amaula           ###   ########.fr       */
+/*   Updated: 2024/10/14 14:18:53 by amaula           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+static void	increment_times_eaten(t_philo *philo)
+{
+	pthread_mutex_lock(philo->mutex);
+	philo->times_eaten++;
+	pthread_mutex_unlock(philo->mutex);
+}
+
+static int	get_start_eating(t_philo *philo)
+{
+	int	start_eating;
+
+	pthread_mutex_lock(philo->mutex);
+	philo->last_meal = timestamp(philo->time);
+	start_eating = philo->last_meal;
+	pthread_mutex_unlock(philo->mutex);
+	return (start_eating);
+}
 
 static int	philo_eat(t_philo *philo)
 {
@@ -21,10 +39,7 @@ static int	philo_eat(t_philo *philo)
 		unlock_forks(philo);
 		return (0);
 	}
-	pthread_mutex_lock(philo->mutex);
-	philo->last_meal = timestamp(philo->time);
-	start_eating = philo->last_meal;
-	pthread_mutex_unlock(philo->mutex);
+	start_eating = get_start_eating(philo);
 	print_log(philo, "is eating");
 	while (timestamp(philo->time) - start_eating < philo->time->eat)
 	{
@@ -36,9 +51,7 @@ static int	philo_eat(t_philo *philo)
 		usleep(1000);
 	}
 	unlock_forks(philo);
-	pthread_mutex_lock(philo->mutex);
-	philo->times_eaten++;
-	pthread_mutex_unlock(philo->mutex);
+	increment_times_eaten(philo);
 	return (1);
 }
 
@@ -59,7 +72,8 @@ static int	philo_sleep(t_philo *philo)
 
 void	*simulate(void *ptr)
 {
-	t_philo		*philo;
+	t_philo			*philo;
+	unsigned int	life;
 
 	philo = (t_philo *)ptr;
 	while (get_status(philo->simulation) == 0)
@@ -71,7 +85,8 @@ void	*simulate(void *ptr)
 		if (philo_sleep(philo) == 0)
 			break ;
 		print_log(philo, "is thinking");
-		usleep((philo->time->die - philo->time->eat - philo->time->sleep) * 500);
+		life = philo->time->die - philo->time->eat - philo->time->sleep;
+		usleep(life * 500);
 	}
 	return (NULL);
 }
