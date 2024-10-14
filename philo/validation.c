@@ -6,7 +6,7 @@
 /*   By: amaula <amaula@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:54:10 by amaula            #+#    #+#             */
-/*   Updated: 2024/10/10 12:02:33 by amaula           ###   ########.fr       */
+/*   Updated: 2024/10/14 16:27:41 by amaula           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,21 +36,6 @@ unsigned int	ft_atoi(char *string)
 	return ((int)ret);
 }
 
-static int	check_memory(int n)
-{
-	size_t	needed_memory;
-
-	needed_memory = sizeof(t_philo);
-	needed_memory += sizeof(pthread_t) + sizeof(pthread_mutex_t);
-	needed_memory *= n;
-	if (needed_memory > 1000000000)
-	{
-		printf("Memory limit reached. (~1GB)\n");
-		return (0);
-	}
-	return (1);
-}
-
 int	validate(int argc, char **argv)
 {
 	int		i;
@@ -59,13 +44,14 @@ int	validate(int argc, char **argv)
 	if (argc != 5 && argc != 6)
 	{
 		printf("Wrong amount of arguments!\n");
-		printf("\t<number_of_philosophers>\n");
-		printf("\t<time_to_die>\n");
+		printf("\t<number_of_philosophers>\n\t<time_to_die>\n");
 		printf("\t<time_to_eat>\n\t<time_to_sleep>\n");
 		printf("\t[number_of_times_each_philosopher_must_eat] <- optional\n");
 		return (0);
 	}
-	if (check_memory(ft_atoi(argv[1])) == 0)
+	if (ft_atoi(argv[1]) > 1000)
+		printf("Too many philosophers.\n");
+	if (ft_atoi(argv[1]) > 1000)
 		return (0);
 	while (i < argc)
 	{
