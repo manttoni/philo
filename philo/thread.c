@@ -64,15 +64,14 @@ int	run_session(t_session *ses)
 
 	created = create_threads(ses, threads, &watcher);
 	joined = join_threads(threads, &watcher, created);
-	if (created != ses->n + 1)
-	{
-		printf("Error creating threads (%d created)\n", created);
-		return (1);
-	}
 	if (joined != created)
 	{
 		printf("Error joining threads (%d joined)\n", joined);
 		return (1);
 	}
+	if (get_status(ses->philos->simulation) == -1)
+		printf("pthread_create error\n");
+	if (get_status(ses->philos->simulation) == -2)
+		printf("mutex error\n");
 	return (0);
 }

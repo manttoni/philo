@@ -12,28 +12,9 @@
 
 #include "philo.h"
 
-void	give_forks(t_session *ses)
-{
-	unsigned int	i;
-
-	i = 0;
-	while (i < ses->n)
-	{
-		pthread_mutex_init(&ses->forks[i], NULL);
-		ses->philos[i].right = &ses->forks[i];
-		if (i + 1 >= ses->n)
-		{
-			ses->philos[0].left = &ses->forks[i];
-			break ;
-		}
-		ses->philos[i + 1].left = &ses->forks[i];
-		i++;
-	}
-}
-
 static void	take_fork(t_philo *philo, pthread_mutex_t *fork)
 {
-	pthread_mutex_lock(fork);
+	lock(fork, philo->simulation);
 	print_log(philo, "has taken a fork");
 }
 
@@ -51,6 +32,6 @@ int	lock_forks(t_philo *philo)
 
 void	unlock_forks(t_philo *philo)
 {
-	pthread_mutex_unlock(philo->left);
-	pthread_mutex_unlock(philo->right);
+	unlock(philo->left, philo->simulation);
+	unlock(philo->right, philo->simulation);
 }
