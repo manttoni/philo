@@ -18,9 +18,9 @@ static int	is_dead(t_philo *philo)
 	unsigned int	now;
 	unsigned int	time_since_meal;
 
-	pthread_mutex_lock(philo->mutex);
+	lock(philo->mutex, philo->simulation);
 	last_meal = philo->last_meal;
-	pthread_mutex_unlock(philo->mutex);
+	unlock(philo->mutex, philo->simulation);
 	now = timestamp(philo->time);
 	time_since_meal = now - last_meal;
 	return (time_since_meal >= philo->time->die);
@@ -46,6 +46,18 @@ static int	check_death(t_session *ses)
 	return (0);
 }
 
+static int	is_satisfied(t_philo *philo)
+{
+	lock(philo->mutex, philo->simulation);
+	if (philo->times_eaten < philo->time->times)
+	{
+		unlock(philo->mutex, philo->simulation);
+		return (0);
+	}
+	unlock(philo->mutex, philo->simulation);
+	return (1);
+}
+
 static void	check_satisfaction(t_session *ses)
 {
 	t_philo			*philo;
@@ -55,13 +67,8 @@ static void	check_satisfaction(t_session *ses)
 	while (i < ses->n)
 	{
 		philo = &ses->philos[i];
-		pthread_mutex_lock(philo->mutex);
-		if (philo->times_eaten < philo->time->times)
-		{
-			pthread_mutex_unlock(philo->mutex);
+		if (is_satisfied(philo) == 0)
 			return ;
-		}
-		pthread_mutex_unlock(philo->mutex);
 		i++;
 	}
 	set_status(philo->simulation, 0);

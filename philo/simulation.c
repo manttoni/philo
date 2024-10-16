@@ -14,19 +14,19 @@
 
 static void	increment_times_eaten(t_philo *philo)
 {
-	pthread_mutex_lock(philo->mutex);
+	lock(philo->mutex, philo->simulation);
 	philo->times_eaten++;
-	pthread_mutex_unlock(philo->mutex);
+	unlock(philo->mutex, philo->simulation);
 }
 
 static int	get_start_eating(t_philo *philo)
 {
 	int	start_eating;
 
-	pthread_mutex_lock(philo->mutex);
+	lock(philo->mutex, philo->simulation);
 	philo->last_meal = timestamp(philo->time);
 	start_eating = philo->last_meal;
-	pthread_mutex_unlock(philo->mutex);
+	unlock(philo->mutex, philo->simulation);
 	return (start_eating);
 }
 

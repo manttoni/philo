@@ -14,17 +14,17 @@
 
 void	set_status(t_simulation *sim, int status)
 {
-	pthread_mutex_lock(sim->mutex);
+	lock(sim->mutex, sim);
 	sim->status = status;
-	pthread_mutex_unlock(sim->mutex);
+	unlock(sim->mutex, sim);
 }
 
 int	get_status(t_simulation *sim)
 {
 	int	status;
 
-	pthread_mutex_lock(sim->mutex);
+	lock(sim->mutex, sim);
 	status = sim->status;
-	pthread_mutex_unlock(sim->mutex);
+	unlock(sim->mutex, sim);
 	return (status);
 }
