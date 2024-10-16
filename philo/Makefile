@@ -1,7 +1,7 @@
 NAME = philo
 
 SRC_DIR = .
-SRC_FIL = watcher.c time.c fork.c philo.c session.c simulation.c validation.c status.c
+SRC_FIL = thread.c watcher.c time.c fork.c philo.c create_session.c simulation.c validation.c status.c
 SRC = $(addprefix $(SRC_DIR)/, $(SRC_FIL))
 
 OBJS = $(SRC:.c=.o)

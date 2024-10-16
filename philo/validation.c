@@ -12,7 +12,7 @@
 
 #include "philo.h"
 
-unsigned int	ft_atoi(char *string)
+unsigned int	parse_string(char *string)
 {
 	unsigned long	ret;
 
@@ -44,18 +44,16 @@ int	validate(int argc, char **argv)
 	if (argc != 5 && argc != 6)
 	{
 		printf("Wrong amount of arguments!\n");
-		printf("\t<number_of_philosophers>\n\t<time_to_die>\n");
-		printf("\t<time_to_eat>\n\t<time_to_sleep>\n");
-		printf("\t[number_of_times_each_philosopher_must_eat] <- optional\n");
 		return (0);
 	}
-	if (ft_atoi(argv[1]) > 1000)
+	if (parse_string(argv[1]) > 1000)
+	{
 		printf("Too many philosophers.\n");
-	if (ft_atoi(argv[1]) > 1000)
 		return (0);
+	}
 	while (i < argc)
 	{
-		if (ft_atoi(argv[i]) == 0)
+		if (parse_string(argv[i]) == 0)
 		{
 			printf(": index %d\n", i);
 			return (0);

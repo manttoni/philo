@@ -12,98 +12,77 @@
 
 #include "philo.h"
 
-static t_simulation	*init_simulation(void)
+void	free_session(t_session *ses)
 {
-	t_simulation	*simulation;
-
-	simulation = malloc(sizeof(t_simulation));
-	if (simulation == NULL)
-		return (NULL);
-	simulation->status = 2;
-	simulation->mutex = malloc(sizeof(pthread_mutex_t));
-	if (simulation->mutex == NULL)
-	{
-		free(simulation);
-		return (NULL);
-	}
-	pthread_mutex_init(simulation->mutex, NULL);
-	return (simulation);
+	free(ses->philos->simulation->mutex);
+	free(ses->philos->time->log_mutex);
+	free(ses->philos->simulation);
+	free(ses->philos->right);
+	free(ses->philos->mutex);
+	free(ses->philos->time);
+	free(ses->philos);
+	free(ses);
 }
 
-static int	init_philos(t_session *ses, t_time_set *time)
+int	give_log_mutex(t_time_set *time)
 {
-	unsigned int	i;
-	t_philo			*philo;
-	t_simulation	*simulation;
-
-	simulation = init_simulation();
-	if (simulation == NULL)
+	time->log_mutex = malloc(sizeof(pthread_mutex_t));
+	if (time->log_mutex == NULL)
+		return (0);
+	if (pthread_mutex_init(time->log_mutex, NULL) != 0)
 	{
 		free(time->log_mutex);
-		free(time);
 		return (0);
-	}
-	i = 0;
-	while (i < ses->n)
-	{
-		philo = &ses->philos[i];
-		philo->id = i + 1;
-		philo->time = time;
-		philo->simulation = simulation;
-		philo->mutex = malloc(sizeof(pthread_mutex_t));
-		if (!philo->mutex)
-			return (0);
-		pthread_mutex_init(philo->mutex, NULL);
-		i++;
 	}
 	return (1);
 }
 
-t_time_set	*init_time(int argc, char **argv)
+void	parse_args(t_time_set *time, int argc, char **argv)
+{
+	time->die = parse_string(argv[2]);
+	time->eat = parse_string(argv[3]);
+	time->sleep = parse_string(argv[4]);
+	if (argc == 6)
+		time->times = parse_string(argv[5]);
+	else
+		time->times = 0;
+}
+
+t_time_set	*create_time(int argc, char **argv)
 {
 	t_time_set	*time;
 
 	time = malloc(sizeof(t_time_set));
-	if (!time)
+	if (time == NULL)
 		return (NULL);
-	time->die = ft_atoi(argv[2]);
-	time->eat = ft_atoi(argv[3]);
-	time->sleep = ft_atoi(argv[4]);
-	time->times = 0;
-	if (argc == 6)
-		time->times = ft_atoi(argv[5]);
-	time->log_mutex = malloc(sizeof(pthread_mutex_t));
-	if (!time->log_mutex)
+	if (give_log_mutex(time) == 0)
 	{
 		free(time);
 		return (NULL);
 	}
-	pthread_mutex_init(time->log_mutex, NULL);
+	parse_args(time, argc, argv);
 	return (time);
 }
 
 int	main(int argc, char **argv)
 {
-	t_session		*ses;
-	unsigned int	n;
-	t_time_set		*time;
+	t_session	*ses;
+	t_time_set	*time;
+	int			ret;
 
 	if (validate(argc, argv) == 0)
 		return (1);
-	time = init_time(argc, argv);
-	if (!time)
+	time = create_time(argc, argv);
+	if (time == NULL)
 		return (1);
-	n = ft_atoi(argv[1]);
-	ses = create_session(n);
-	if (!ses)
+	ses = create_session(parse_string(argv[1]), time);
+	if (ses == NULL)
 	{
 		free(time->log_mutex);
 		free(time);
 		return (1);
 	}
-	give_forks(ses);
-	if (init_philos(ses, time) == 1)
-		start_session(ses);
+	ret = run_session(ses);
 	free_session(ses);
-	return (0);
+	return (ret);
 }

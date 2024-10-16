@@ -16,11 +16,11 @@
 # include <pthread.h>
 # include <stdlib.h>
 # include <stdio.h>
-# include <string.h>
 # include <unistd.h>
 # include <time.h>
 # include <sys/time.h>
 # include <limits.h>
+# include <string.h>
 
 /* Status:
  * 	-1: error
@@ -75,11 +75,9 @@ int				lock_forks(t_philo *philo);
 void			unlock_forks(t_philo *philo);
 long			timestamp(t_time_set *time);
 long			get_ms(void);
-unsigned int	ft_atoi(char *string);
-void			give_forks(t_session *ses);
-void			start_session(t_session *ses);
-void			free_session(t_session *ses);
-t_session		*create_session(unsigned int n);
+unsigned int	parse_string(char *string);
+int				run_session(t_session *ses);
+t_session		*create_session(unsigned int n, t_time_set *time);
 void			*simulate(void *ptr);
 void			set_status(t_simulation *sim, int status);
 int				get_status(t_simulation *sim);
