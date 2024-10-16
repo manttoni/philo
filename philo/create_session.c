@@ -107,11 +107,26 @@ t_session	*create_session(unsigned int n, t_time_set *time)
 	}
 	memset(ses->philos, 0, n * sizeof(t_philo));
 	ses->n = n;
-	if (give_mutexes(ses->philos, n) == 1)
-		if (give_forks(ses->philos, n) == 1)
-			if (give_shared(ses->philos, n, time) == 1)
-				return (ses);
-	free(ses->philos);
-	free(ses);
-	return (NULL);
+	if (give_mutexes(ses->philos, n) == 0)
+	{
+		free(ses->philos);
+		free(ses);
+		return (NULL);
+	}
+	if (give_forks(ses->philos, n) == 0)
+	{
+		free(ses->philos->mutex);
+		free(ses->philos);
+		free(ses);
+		return (NULL);
+	}
+	if (give_shared(ses->philos, n, time) == 0)
+	{
+		free(ses->philos->right);
+		free(ses->philos->mutex);
+		free(ses->philos);
+		free(ses);
+		return (NULL);
+	}
+	return (ses);
 }
