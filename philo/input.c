@@ -12,6 +12,11 @@
 
 #include "philo.h"
 
+/* Parses string into int while checking for errors
+ * Return value must be >= 0
+ * 0 indicates an error:
+ * 	- Overflow error: when more than INT_MAX
+ * 	- Value error: when 0 or non-numeric chars are encountered */
 unsigned int	parse_string(char *string)
 {
 	unsigned long	ret;
@@ -36,6 +41,7 @@ unsigned int	parse_string(char *string)
 	return ((int)ret);
 }
 
+/* Checks if users input is valid */
 int	validate(int argc, char **argv)
 {
 	int		i;

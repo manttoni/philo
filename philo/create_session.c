@@ -1,5 +1,6 @@
 #include "philo.h"
 
+/* Creates the simulation struct and a mutex that protects the status value */
 static t_simulation	*create_simulation(void)
 {
 	t_simulation	*sim;
@@ -23,6 +24,9 @@ static t_simulation	*create_simulation(void)
 	return (sim);
 }
 
+/* Gives two pointers to each philosopher
+ * time: time settings (eating time, sleeping time etc.)
+ * simulation: hold status value (wait, start, stop, error) */
 static int	give_shared(t_philo *philos, unsigned int n, t_time_set *time)
 {
 	unsigned int	i;
@@ -41,7 +45,9 @@ static int	give_shared(t_philo *philos, unsigned int n, t_time_set *time)
 	return (1);
 }
 
-
+/* Creates n forks and gives two to each philosopher
+ * The right fork of a philosopher is the left fork of the next one 
+ * The right fork of the last philo is the left fork of the first */
 static int	give_forks(t_philo *philos, unsigned int n)
 {
 	pthread_mutex_t	*forks;
@@ -70,6 +76,8 @@ static int	give_forks(t_philo *philos, unsigned int n)
 	return (1);
 }
 
+/* Creates a mutex for each philosopher
+ * It is used when accessing 'last_meal' or 'times_eaten' */
 static int	give_mutexes(t_philo *philos, unsigned int n)
 {
 	pthread_mutex_t	*mutexes;
@@ -92,6 +100,9 @@ static int	give_mutexes(t_philo *philos, unsigned int n)
 	return (1);
 }
 
+/* Create data structure that is used in the simulation
+ * In case of error, all memory is freed, except for
+ * 't_time_set *time' which is allocated in main */
 t_session	*create_session(unsigned int n, t_time_set *time)
 {
 	t_session	*ses;

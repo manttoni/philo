@@ -30,6 +30,8 @@ static int	get_start_eating(t_philo *philo)
 	return (start_eating);
 }
 
+/* Takes forks as soon as they are available
+ * Eats for philo->time->eat ms or until simulation end */
 static int	philo_eat(t_philo *philo)
 {
 	int	start_eating;
@@ -55,6 +57,7 @@ static int	philo_eat(t_philo *philo)
 	return (1);
 }
 
+/* Sleeps for philo->time->sleep ms or until simulation ends */
 static int	philo_sleep(t_philo *philo)
 {
 	int	start_sleeping;
@@ -70,6 +73,14 @@ static int	philo_sleep(t_philo *philo)
 	return (1);
 }
 
+/* Simulates the dining philosophers
+ * Waits until all threads are created
+ * 	if succesful, starts simulation
+ * 	if not, simulation doesn't start
+ * Even id'd philosophers wait 1ms to prevent deadlock
+ * 	doesn't work with valgrind. take_forks has solution for that
+ * Thinking duration is half of the remaining life after eat and sleep 
+ * 	Prevents faster philos from eating the food of the slow ones */
 void	*simulate(void *ptr)
 {
 	t_philo			*philo;

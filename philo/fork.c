@@ -12,12 +12,17 @@
 
 #include "philo.h"
 
+/* Lock the fork/mutex and print a message */
 static void	take_fork(t_philo *philo, pthread_mutex_t *fork)
 {
 	pthread_mutex_lock(fork);
 	print_log(philo, "has taken a fork");
 }
 
+/* Lock both forks in an order depending of philosophers id
+ * Even id locks left then right
+ * Odd id locks right then left
+ * Prevents deadlock when using valgrind */
 int	lock_forks(t_philo *philo)
 {
 	if (philo->left == philo->right)
@@ -30,6 +35,7 @@ int	lock_forks(t_philo *philo)
 	return (get_status(philo->simulation));
 }
 
+/* Unlock both forks */
 void	unlock_forks(t_philo *philo)
 {
 	pthread_mutex_unlock(philo->left);

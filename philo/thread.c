@@ -12,6 +12,10 @@
 
 #include "philo.h"
 
+/* Creates threads until all are created or one fails
+ * Starts simulation timer
+ * Sets status of simulation based on success or fail
+ * Returns number of created threads */
 static int	create_threads(t_session *ses, pthread_t *threads, pthread_t *watcher)
 {
 	unsigned int	i;
@@ -39,6 +43,7 @@ static int	create_threads(t_session *ses, pthread_t *threads, pthread_t *watcher
 	return (i + 1);
 }
 
+/* Joins all created threads */
 static void	join_threads(pthread_t *threads, pthread_t *watcher, int created)
 {
 	int	i;
@@ -53,6 +58,8 @@ static void	join_threads(pthread_t *threads, pthread_t *watcher, int created)
 		pthread_join(*watcher, NULL);
 }
 
+/* Creates threads and waits for them to finish
+ * Watcher is a thread that continuously checks philo status */
 int	run_session(t_session *ses)
 {
 	pthread_t		watcher;

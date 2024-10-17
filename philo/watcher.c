@@ -12,6 +12,8 @@
 
 #include "philo.h"
 
+/* If time_to_die ms have passed since the start of the simulation or the 
+ * beginning of the philos last meal */
 static int	is_dead(t_philo *philo)
 {
 	unsigned int	last_meal;
@@ -26,6 +28,7 @@ static int	is_dead(t_philo *philo)
 	return (time_since_meal >= philo->time->die);
 }
 
+/* If a philo is dead, ends simulation */
 static int	check_death(t_session *ses)
 {
 	t_philo			*philo;
@@ -46,6 +49,7 @@ static int	check_death(t_session *ses)
 	return (0);
 }
 
+/* If philo has eaten enough */
 static int	is_satisfied(t_philo *philo)
 {
 	pthread_mutex_lock(philo->mutex);
@@ -58,6 +62,8 @@ static int	is_satisfied(t_philo *philo)
 	return (1);
 }
 
+/* If a philo is not satisfied, doesn't end simulation
+ * If all are satisfied, simulation ends */
 static void	check_satisfaction(t_session *ses)
 {
 	t_philo			*philo;
@@ -74,6 +80,9 @@ static void	check_satisfaction(t_session *ses)
 	set_status(philo->simulation, 0);
 }
 
+/* Checks philo status
+ * 	Death: checks if a philo is dead
+ * 	Satisfaction: if set checks if all philos have eaten enough times */
 void	*watch(void *ptr)
 {
 	t_session	*ses;

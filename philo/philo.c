@@ -12,6 +12,7 @@
 
 #include "philo.h"
 
+/* Frees the memory of the whole data structure */
 void	free_session(t_session *ses)
 {
 	free(ses->philos->simulation->mutex);
@@ -24,6 +25,7 @@ void	free_session(t_session *ses)
 	free(ses);
 }
 
+/* Creates a mutex for printing log messages */
 int	give_log_mutex(t_time_set *time)
 {
 	time->log_mutex = malloc(sizeof(pthread_mutex_t));
@@ -37,6 +39,7 @@ int	give_log_mutex(t_time_set *time)
 	return (1);
 }
 
+/* Since the input is valid it can be used */
 void	parse_args(t_time_set *time, int argc, char **argv)
 {
 	time->die = parse_string(argv[2]);
@@ -48,6 +51,8 @@ void	parse_args(t_time_set *time, int argc, char **argv)
 		time->times = 0;
 }
 
+/* Creates t_time_set struct from user input 
+ * and gives it a mutex */
 t_time_set	*create_time(int argc, char **argv)
 {
 	t_time_set	*time;
@@ -64,6 +69,10 @@ t_time_set	*create_time(int argc, char **argv)
 	return (time);
 }
 
+/* Validates input
+ * Gets time settings as a struct (t_time_set)
+ * Gets data structure as a struct (t_session)
+ * Gives session to 'threader' */
 int	main(int argc, char **argv)
 {
 	t_session	*ses;

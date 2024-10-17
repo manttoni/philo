@@ -33,8 +33,7 @@ typedef struct s_simulation
 	int				status;
 }	t_simulation;
 
-/* n = number_of_philosophers 
- * die = time_to_die
+/* die = time_to_die
  * eat = time_to_eat
  * sleep = time_to_sleep
  * times = [number_of_times_each_philosopher_must_eat]*/
@@ -48,6 +47,7 @@ typedef struct s_time_set
 	pthread_mutex_t	*log_mutex;
 }	t_time_set;
 
+/* last_meal is the time when it last started eating */
 typedef struct s_philo
 {
 	unsigned int	id;
@@ -60,6 +60,7 @@ typedef struct s_philo
 	pthread_mutex_t	*mutex;
 }	t_philo;
 
+/* n is amount of philosophers in 'philos' array */
 typedef struct s_session
 {
 	unsigned int	n;
@@ -79,5 +80,15 @@ t_session		*create_session(unsigned int n, t_time_set *time);
 void			*simulate(void *ptr);
 void			set_status(t_simulation *sim, int status);
 int				get_status(t_simulation *sim);
+
+/* session
+ * ->	n	.	.	.	.	.	(number of philos)
+ * ->	philos	.	.	.	.	(array that has all philos)
+ *  	->	id	.	.	.	.	(between 1 and n)
+ * 		->	forks	.	.	.	(left and right forks/mutexes)
+ * 		->	simulation	.	.	(one simulation-struct shared between all philos)
+ * 			->	status	.	.	(status of the simulation)
+ * 		->	time	.	.	.	(one time-struct shared between all philos)
+ * 			->	settings	.	(settings defined by user) */
 
 #endif
