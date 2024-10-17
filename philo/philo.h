@@ -63,9 +63,7 @@ typedef struct s_philo
 typedef struct s_session
 {
 	unsigned int	n;
-	pthread_t		*threads;
 	t_philo			*philos;
-	pthread_mutex_t	*forks;
 }	t_session;
 
 void			*watch(void *ptr);
