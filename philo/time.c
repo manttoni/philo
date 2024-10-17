@@ -19,10 +19,10 @@ long	timestamp(t_time_set *t)
 
 void	print_log(t_philo *philo, char *message)
 {
-	lock(philo->time->log_mutex, philo->simulation);
+	pthread_mutex_lock(philo->time->log_mutex);
 	if (get_status(philo->simulation) == 1)
 		printf("%ld %d %s\n", timestamp(philo->time), philo->id, message);
-	unlock(philo->time->log_mutex, philo->simulation);
+	pthread_mutex_unlock(philo->time->log_mutex);
 }
 
 long	get_ms(void)

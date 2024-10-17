@@ -39,20 +39,18 @@ static int	create_threads(t_session *ses, pthread_t *threads, pthread_t *watcher
 	return (i + 1);
 }
 
-static int	join_threads(pthread_t *threads, pthread_t *watcher, int created)
+static void	join_threads(pthread_t *threads, pthread_t *watcher, int created)
 {
 	int	i;
 
 	i = 0;
 	while (i < created - 1)
 	{
-		if (pthread_join(threads[i], NULL) != 0)
-			return (i);
+		pthread_join(threads[i], NULL);
 		i++;
 	}
-	if (i < created && pthread_join(*watcher, NULL) != 0)
-			return (i);
-	return (i + 1);
+	if (i < created)
+		pthread_join(*watcher, NULL);
 }
 
 int	run_session(t_session *ses)
@@ -60,24 +58,13 @@ int	run_session(t_session *ses)
 	pthread_t		watcher;
 	pthread_t		threads[ses->n];
 	unsigned int	created;
-	unsigned int	joined;
 
 	created = create_threads(ses, threads, &watcher);
-	joined = join_threads(threads, &watcher, created);
+	join_threads(threads, &watcher, created);
 	if (get_status(ses->philos->simulation) == -1)
 	{
 		printf("pthread_create error\n");
 		return (1);
-	}
-	if (get_status(ses->philos->simulation) == -2)
-	{
-		printf("mutex error\n");
-		return (2);
-	}
-	if (joined != created)
-	{
-		printf("Error joining threads (%d joined)\n", joined);
-		return (3);
 	}
 	return (0);
 }

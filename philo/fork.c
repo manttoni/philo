@@ -14,7 +14,7 @@
 
 static void	take_fork(t_philo *philo, pthread_mutex_t *fork)
 {
-	lock(fork, philo->simulation);
+	pthread_mutex_lock(fork);
 	print_log(philo, "has taken a fork");
 }
 
@@ -32,6 +32,6 @@ int	lock_forks(t_philo *philo)
 
 void	unlock_forks(t_philo *philo)
 {
-	unlock(philo->left, philo->simulation);
-	unlock(philo->right, philo->simulation);
+	pthread_mutex_unlock(philo->left);
+	pthread_mutex_unlock(philo->right);
 }

@@ -14,19 +14,19 @@
 
 static void	increment_times_eaten(t_philo *philo)
 {
-	lock(philo->mutex, philo->simulation);
+	pthread_mutex_lock(philo->mutex);
 	philo->times_eaten++;
-	unlock(philo->mutex, philo->simulation);
+	pthread_mutex_unlock(philo->mutex);
 }
 
 static int	get_start_eating(t_philo *philo)
 {
 	int	start_eating;
 
-	lock(philo->mutex, philo->simulation);
+	pthread_mutex_lock(philo->mutex);
 	philo->last_meal = timestamp(philo->time);
 	start_eating = philo->last_meal;
-	unlock(philo->mutex, philo->simulation);
+	pthread_mutex_unlock(philo->mutex);
 	return (start_eating);
 }
 
@@ -34,7 +34,7 @@ static int	philo_eat(t_philo *philo)
 {
 	int	start_eating;
 
-	if (lock_forks(philo) == 0)
+	if (lock_forks(philo) != 1)
 	{
 		unlock_forks(philo);
 		return (0);
@@ -43,7 +43,7 @@ static int	philo_eat(t_philo *philo)
 	print_log(philo, "is eating");
 	while (timestamp(philo->time) - start_eating < philo->time->eat)
 	{
-		if (get_status(philo->simulation) == 0)
+		if (get_status(philo->simulation) != 1)
 		{
 			unlock_forks(philo);
 			return (0);
@@ -63,7 +63,7 @@ static int	philo_sleep(t_philo *philo)
 	start_sleeping = timestamp(philo->time);
 	while (timestamp(philo->time) - start_sleeping < philo->time->sleep)
 	{
-		if (get_status(philo->simulation) == 0)
+		if (get_status(philo->simulation) != 1)
 			return (0);
 		usleep(1000);
 	}

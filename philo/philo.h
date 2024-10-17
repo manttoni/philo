@@ -23,7 +23,6 @@
 # include <string.h>
 
 /* Status:
- * 	-2: mutex error
  * 	-1: pthread_create error
  * 	 0: stop simulation
  * 	 1: start normal
@@ -69,8 +68,6 @@ typedef struct s_session
 	pthread_mutex_t	*forks;
 }	t_session;
 
-void			lock(pthread_mutex_t *mutex, t_simulation *simulation);
-void			unlock(pthread_mutex_t *mutex, t_simulation *simulation);
 void			*watch(void *ptr);
 int				validate(int argc, char **argv);
 void			print_log(t_philo *philo, char *message);
