@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   create_session.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: amaula <amaula@student.hive.fi>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/18 13:31:06 by amaula            #+#    #+#             */
+/*   Updated: 2024/10/18 13:31:24 by amaula           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 /* Creates the simulation struct and a mutex that protects the status value */
@@ -118,20 +130,9 @@ t_session	*create_session(unsigned int n, t_time_set *time)
 	}
 	memset(ses->philos, 0, n * sizeof(t_philo));
 	ses->n = n;
-	if (give_mutexes(ses->philos, n) == 0)
-	{
-		free(ses->philos);
-		free(ses);
-		return (NULL);
-	}
-	if (give_forks(ses->philos, n) == 0)
-	{
-		free(ses->philos->mutex);
-		free(ses->philos);
-		free(ses);
-		return (NULL);
-	}
-	if (give_shared(ses->philos, n, time) == 0)
+	if (give_mutexes(ses->philos, n) == 0
+		|| give_forks(ses->philos, n) == 0
+		|| give_shared(ses->philos, n, time) == 0)
 	{
 		free(ses->philos->right);
 		free(ses->philos->mutex);
